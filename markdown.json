@@ -1,0 +1,95 @@
+{
+	// Place your snippets for latex here. Each snippet is defined under a snippet name and has a prefix, body and 
+	// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the same ids are connected.
+	"Italicize": {
+		"body": "_$TM_SELECTED_TEXT$1_$0"
+	},
+	"Bold": {
+		"body": "**$TM_SELECTED_TEXT$1**$0"
+	},
+	"Display Equation":{
+		"prefix": ["\\["],
+		"body": [
+			"",
+			"$$$TM_SELECTED_TEXT$1$$",
+			"$0"
+		],
+		"description": "Insert block equation with line-breaks and indentation."
+	},
+	"Inline Equation":{
+		//"prefix": ["\\("],
+		"body": [
+			"$$TM_SELECTED_TEXT$1$$0"
+		],
+		"description": "Insert inline equation."
+	},
+	"Equation Environment":{
+		"prefix": ["\\begin{equation}", "\\equation"],
+		"body": [
+			"\\begin{equation}",
+			"\t\\label{eq:${1:label}}",
+			"\t$TM_SELECTED_TEXT$2",
+			"\\end{equation}",
+			"$0"
+		],
+		"description": "Insert inline equation."
+	},
+	"Markdown Table (3 columns)":{
+		"prefix": "table",
+		"body": [
+			//Including this line causes table to not be rendered as a table: "<!-- Use '-----' for left-aligned, '-----:' for right-aligned, and ':-----:' for center-aligned,  -->",
+			"| ${1:       } | ${2:        } | ${3:        } |",
+			"|:-----------:|:|:-----------:|:|:-----------:|",
+			"| ${4:       } | ${5:       } | ${6:       } |"
+		]
+	},
+	"HTML Table":{
+		"prefix": "HTML table",
+		"body": [
+			"<table>",
+			"${1:table header}",
+			"${2:table row}",
+			"$0",
+			"</table>"
+		]
+	},
+	"HTML Table Header (3 columns)":{
+		"prefix": "html table header (3 columns)",
+		"body": [
+			"<tr>",
+			"\t<th>$1</th>",
+			"\t<th>$2</th>",
+			"\t<th>$3</th>",
+			"</tr>",
+		]
+	},
+	"HTML Table Row (3 columns)":{
+		"prefix": "html table row (3 columns)",
+		"body": [
+			"<tr>",
+			"\t<td>$1</td>",
+			"\t<td>$2</td>",
+			"\t<td>$3</td>",
+			"</tr>",
+		]
+	},
+	"Citation":{
+		"prefix": "\\cite",
+		"body": [
+			"{% cite $1 %}$0",
+		]
+	},
+	"Citation with Locator":{
+		"prefix": "\\cite with locator",
+		"body": [
+			"{% cite $1 --label <> --locator Theorem $2 %}$0",
+		]
+	},
+	"Equation reference":{
+		"prefix": "\\eqref",
+		"body": [
+			"(\\ref{eq:${1:label}})$0",
+		]
+	},
+}
