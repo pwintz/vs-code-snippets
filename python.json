@@ -13,6 +13,42 @@
 	// 	"description": "Log output to console"
 	// }
 
+  "Command Line Script":{
+    "prefix": ["Command Line Script"],
+    "isFileTemplate": true,
+    "body": [
+      "#! /bin/env python3",
+      "",
+      "import os",
+      "import argparse",
+      "import math",
+      "# Type hinting.",
+      "from typing import List, Set, Dict, Tuple, Union",
+      "", "",
+      "def main():",
+      "\tparser = argparse.ArgumentParser(prog='${1:program name}')",
+      "\t${2|add positional argument,add option,add flag, |}",
+      "\targs = parser.parse_args()",
+      "\t$0",
+      "", "",      
+      "if __name__ == '__main__':",
+      "\tmain()"
+    ]
+  },
+  "Add Positional Argument": {
+    "prefix": ["add positional argument"],
+    "body": [
+      "parser.add_argument('${1:argument name}')  # option that takes a value",
+      "${2|add positional argument,add option,add flag, |}"
+    ]
+  },
+  "Add Flag Argument": {
+    "prefix": ["add flag"],
+    "body": [
+      "parser.add_argument('${1:argument name}', action='store_true')           # on/off flag",
+      "${2|add positional argument,add option,add flag, |}"
+    ]
+  },
   "Main function":{
     "prefix": "main",
     "body": [
@@ -23,5 +59,248 @@
         "\tmain()",
         ""
       ]
+  },
+  // ----------- // 
+  //   LOGGING   //
+  // ----------- // 
+  "Print value": {
+  },
+  // ------------ //
+  //   COMMENTS   //
+  // ------------ //
+  "Multiline Comment": {
+    "prefix": "\"\"\"",
+    "body": [
+      "\"\"\"",
+      "$TM_SELECTED_TEXT$0",
+      "\"\"\""
+    ]
+  },
+  // ---------- //
+  // Exceptions //
+  // ---------- //
+  "Explicit Assert":{
+    "prefix": "assert (explicit)",
+    "body": [
+      "if not($1):",
+      "\traise AssertionError(\"Assertion failed: $1\")",
+      "",
+      ]
+  },
+  "Raise":{
+    // List of exceptions from "https://docs.python.org/3/library/exceptions.html"
+    // BaseException                        # Base class for all exceptions.
+    // └── Exception                        # Base class for most built-in exceptions (excluding system-exiting exceptions).
+    //       ├── ArithmeticError              # Base class for arithmetic-related exceptions.
+    //       │    ├── FloatingPointError      # Raised when a floating-point operation fails.
+    //       │    ├── OverflowError           # Raised when a result is too large to be represented.
+    //       │    └── ZeroDivisionError       # Raised when division or modulo by zero is attempted.
+    //       ├── LookupError                  # Base class for index or key lookup errors.
+    //       │    ├── IndexError              # Raised when a sequence index is out of range.
+    //       │    └── KeyError                # Raised when a dictionary key is not found.
+    //       ├── OSError                      # Base class for system-related errors.
+    //       │    ├── FileExistsError         # Raised when trying to create a file or directory that already exists.
+    //       │    ├── FileNotFoundError       # Raised when a file or directory is requested but not found.
+    //       │    ├── IsADirectoryError       # Raised when a file operation is attempted on a directory.
+    //       │    ├── NotADirectoryError      # Raised when a directory operation is attempted on something that is not a directory.
+    //       │    └── TimeoutError            # Raised when a system operation times out.
+    //       ├── RuntimeError                 # Base class for runtime-related errors.
+    //       ├── TypeError                    # Raised when an operation is performed on an object of an inappropriate type.
+    //       ├── ValueError                   # Raised when an operation receives an argument of the correct type but with an invalid value.
+    "prefix": "raise",
+    "body": [
+      "raise ${1|ValueError,TypeError,Exception,NotImplementedError|}(f'$2')",
+      "",
+      ]
+  },
+  // List of exceptions from "https://docs.python.org/3/library/exceptions.html"
+  // BaseException                        # Base class for all exceptions.
+  // ├── KeyboardInterrupt                # Raised when the user interrupts program execution, usually by pressing Ctrl+C.
+  // ├── SystemExit                       # Raised by the `sys.exit()` function to exit the program.
+  // └── Exception                        # Base class for most built-in exceptions (excluding system-exiting exceptions).
+  //       ├── ArithmeticError              # Base class for arithmetic-related exceptions.
+  //       │    ├── FloatingPointError      # Raised when a floating-point operation fails.
+  //       │    ├── OverflowError           # Raised when a result is too large to be represented.
+  //       │    └── ZeroDivisionError       # Raised when division or modulo by zero is attempted.
+  //       ├── AssertionError               # Raised when an `assert` statement fails.
+  //       ├── AttributeError               # Raised when an invalid attribute reference or assignment is attempted.
+  //       ├── BufferError                  # Raised when a buffer-related operation fails.
+  //       ├── EOFError                     # Raised when the end of file is reached unexpectedly during input.
+  //       ├── ImportError                  # Raised when an import fails.
+  //       │    └── ModuleNotFoundError     # Raised when a module cannot be found.
+  //       ├── LookupError                  # Base class for index or key lookup errors.
+  //       │    ├── IndexError              # Raised when a sequence index is out of range.
+  //       │    └── KeyError                # Raised when a dictionary key is not found.
+  //       ├── MemoryError                  # Raised when an operation runs out of memory.
+  //       ├── NameError                    # Raised when a local or global name is not found.
+  //       │    └── UnboundLocalError       # Raised when trying to access a local variable that has not been assigned.
+  //       ├── OSError                      # Base class for system-related errors.
+  //       │    ├── BlockingIOError         # Raised when an operation would block on a non-blocking IO operation.
+  //       │    ├── ChildProcessError       # Raised when an operation on a child process fails.
+  //       │    ├── ConnectionError         # Base class for connection-related errors.
+  //       │    │    ├── BrokenPipeError    # Raised when writing to a pipe that has been closed.
+  //       │    │    ├── ConnectionAbortedError  # Raised when a connection is aborted by the peer.
+  //       │    │    ├── ConnectionRefusedError  # Raised when a connection is refused by the peer.
+  //       │    │    └── ConnectionResetError    # Raised when a connection is reset by the peer.
+  //       │    ├── FileExistsError         # Raised when trying to create a file or directory that already exists.
+  //       │    ├── FileNotFoundError       # Raised when a file or directory is requested but not found.
+  //       │    ├── InterruptedError        # Raised when a system call is interrupted.
+  //       │    ├── IsADirectoryError       # Raised when a file operation is attempted on a directory.
+  //       │    ├── NotADirectoryError      # Raised when a directory operation is attempted on something that is not a directory.
+  //       │    ├── PermissionError         # Raised when trying to perform an operation without the necessary permissions.
+  //       │    ├── ProcessLookupError      # Raised when a process cannot be found.
+  //       │    └── TimeoutError            # Raised when a system operation times out.
+  //       ├── ReferenceError               # Raised when a weak reference is accessed after the object has been deleted.
+  //       ├── RuntimeError                 # Base class for runtime-related errors.
+  //       │    ├── NotImplementedError     # Raised when an abstract method is not implemented in a subclass.
+  //       │    └── RecursionError          # Raised when the maximum recursion depth is exceeded.
+  //       ├── TypeError                    # Raised when an operation is performed on an object of an inappropriate type.
+  //       ├── ValueError                   # Raised when an operation receives an argument of the correct type but with an invalid value.
+  "Try-Except Block":{
+    "prefix": "try", 
+    "body": [
+      "try:",
+      "\t$TM_SELECTED_TEXT$0",
+      "except ${1|Exception,ArithmeticError,OSError,TypeError,ValueError|} as err:",
+      "\traise ${2|Exception,ArithmeticError,OSError,TypeError,ValueError|}(f'${3:error message}') from err"
+    ]
+  },"Except Block":{
+    "prefix": "except", 
+    "body": [
+      "except ${1|Exception,ArithmeticError,OSError,TypeError,ValueError|} as err:",
+      "\traise ${2|Exception,ArithmeticError,OSError,TypeError,ValueError|}(f'${3:error message}') from err"
+    ]
+  },
+  // Warning                     # Base class for warning categories.
+  // ├── BytesWarning            # Raised when certain bytes-related operations might lead to issues.
+  // ├── DeprecationWarning      # Raised for deprecated features.
+  // ├── EncodingWarning         # Raised when a default encoding is assumed.
+  // ├── FutureWarning           # Raised for features that will be deprecated in the future.
+  // ├── ImportWarning           # Raised when an issue occurs during module import.
+  // ├── PendingDeprecationWarning  # Raised for features that will be deprecated, but not imminently.
+  // ├── ResourceWarning         # Raised when resource usage issues occur (e.g., unclosed files).
+  // ├── RuntimeWarning          # Raised when a runtime issue is detected (e.g., memory usage).
+  // ├── SyntaxWarning           # Raised when syntax issues are found that do not prevent execution.
+  // ├── UnicodeWarning          # Raised when Unicode issues occur.
+  // └── UserWarning             # Raised for user-generated warnings.
+  "Raise Warning": {
+    "prefix": "warn",
+    "body": [
+      "${3:# Be sure to use \"import warnings\" at the top of the file}",
+      "warnings.warn(\"${1:Warning message}\", ${2|Warning,UserWarning,DeprecationWarning,PendingDeprecationWarning,ResourceWarning|})"
+    ]
+  },
+  "Define abstract class":{
+    "prefix": "class abstract",
+    "body": [
+      "",
+      // Requies "from abc import abstractmethod, ABC" in file.
+      "class ${1:class_name}(ABC):",
+      "\"\"\"",
+      "$2",
+      "\"\"\"",
+      "\t@abstractmethod",
+      "\tdef ${3:fnc_name}(self):",
+      "\t\treturn "
+    ]
+
+  },
+  "Define abstract method":{
+    "prefix": "def abstract",
+    "body": [
+      // Requies "from abc import abstractmethod" in file.
+      "@abstractmethod",
+      "def $1(self, $2):",
+      "\tpass",
+      ""
+    ]
+
+  },
+  "Pause":{
+    "prefix": ["pause", "sleep", "wait"],
+    "body": [
+      "# Pause for $1 second",
+      "time.sleep($1)"
+    ]
+  },
+  //---------------------//
+  // OBJECTS AND CLASSES //
+  //---------------------//
+  "Is instance?": {
+    "prefix": ["isinstance", "instanceof"],
+    "body": "isinstance($TM_SELECTED_TEXT${1:object}, ${2|float,int,list,dict|})$0"
+  },
+  //-----------------------//
+  // FILES AND DIRECTORIES //
+  //-----------------------//
+  "List Files and Directories":{
+    "prefix": ["ls", "os.listdir"],
+    "body": [
+      "os.listdir($TM_SELECTED_TEXT$0)"
+    ]
+  },
+  "Copy File":{
+    "prefix": ["copy", "copyfile"],
+    "body": [
+      "# Copy file",
+      "shutil.copyfile(${1:src}, ${2:dst})"
+    ]
+  },
+  "Delete File":{
+    "prefix": ["delete", "remove"],
+    "body": [
+      "# Delete file",
+      "os.remove(${1:path})"
+    ]
+  },
+  "Make Directory":{
+    "prefix": ["mkdir", "makedirs", "os.makedirs", "os.mkdir"],
+    "body": [
+      "# Create directory",
+      "os.makedirs(${1:path}${2|\\, exist_ok=True),)|}"
+    ]
+  },
+  //--------------//
+  // UNIT TESTING //
+  //--------------//
+  "Test File":{
+    "prefix": ["Test File Template"],
+    "isFileTemplate": true,
+    "body": [
+      "#! /bin/env python3",
+      "",
+      "import unittest",
+      "",
+      "${1:Test}",
+      "",
+      "if __name__ == '__main__':",
+      "\tunittest.main()"
+    ]
+  },
+  "Test Case (class)":{
+    "prefix": ["TestCase"],
+    "body": [
+      "class Test_${1:name_of_thing_being_tested}(unittest.TestCase):",
+      "\t${2:def test}"
+    ]
+  },
+  "Test Function ()":{
+    "prefix": ["def test"],
+    "body": [
+      "def test_${1:situation}(self):",
+      "\t# ---- Setup ---- ",
+      "\t$0",
+      "\t# ---- Execution ----\n",
+      "\t# ---- Assertions ---- ",
+      "\tself.fail(f'Implement this test case!')"
+    ]
+  },
+  "Assert Raises Exception": {
+    "prefix": ["assertRaises", "assertException"],
+    "body": [
+      "with self.assertRaises(${1:Exception}):",
+      "\t$0"
+    ]
   }
+
 }

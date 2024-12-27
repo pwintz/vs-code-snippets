@@ -92,4 +92,48 @@
 			"(\\ref{eq:${1:label}})$0",
 		]
 	},
+	"Liquid If" : {
+		"prefix": ["if", ],
+		"body": [
+			"{% if $1 %} ",
+			"\t$TM_SELECTED_TEXT$0",
+			"{% endif %}" 
+		]
+	},
+	"Liquid If-else" : {
+		"prefix": ["if-else", ],
+		"body": [
+			"{% if $1 %} ",
+			"\t$TM_SELECTED_TEXT$2",
+			"{% else %}",
+			"\t$0",
+			"{% endif %}" 
+		]
+	},
+	"Capture" : {
+		"prefix": ["capture", ],
+		"body": [
+			"{% capture ${1:var_name} %} ",
+			"\t$TM_SELECTED_TEXT$0",
+			"{% endcapture %}" 
+		]
+	},
+	"Capture Raw" : {
+		"prefix": ["capture raw", ],
+		"body": [
+			"{% capture ${1:var_name} %}{% raw %} ",
+			"\t$TM_SELECTED_TEXT$0",
+			"{% endraw %}{% endcapture %}" 
+		]
+	},
+	"Include Code" : {
+		"prefix": ["include code", "include-code"],
+		"body": [
+			"{% include code-example.html  ",
+			"\tlanguage=${1|latex|}",
+			"\tcode=$TM_SELECTED_TEXT$2",
+			"\toutput=$0",
+			"%}" 
+		]
+	}
 }
