@@ -110,6 +110,14 @@
 			"{% endif %}" 
 		]
 	},
+	"Include" : {
+		"prefix": ["include", "include"],
+		"body": [
+			"{% include ${1|info_box.html,warning_box.html|}  ",
+			"\t${2:parameter1}=${3:value}",
+			"%}" 
+		]
+	},
 	"Capture" : {
 		"prefix": ["capture", ],
 		"body": [
@@ -130,7 +138,7 @@
 		"prefix": ["include code", "include-code"],
 		"body": [
 			"{% include code-example.html  ",
-			"\tlanguage=${1|latex|}",
+			"\tlanguage=${1|\"latex\"|}",
 			"\tcode=$TM_SELECTED_TEXT$2",
 			"\toutput=$0",
 			"%}" 

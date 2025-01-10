@@ -61,7 +61,7 @@
 				// Unescaped RegEx: ([\S\s]*)\$\s*(.*?)\s*\$([,.]{0,1})([\S\s]*)
 				// Group 1: Content before equation. ("[\S\s]" matches any character)
 				// Group 2: Contents of equation, stripping white space.
-				// Group 3: Punctuation after equation ("[,.]{0,1}" matchs "," or "." zero or one times)
+				// Group 3: Punctuation after equation ("[,.]{0,1}" matches "," or "." zero or one times)
 				// Group 4: Content after equation
 				"${TM_SELECTED_TEXT/([\\S\\s]*)\\$\\s*(.*?)\\s*\\$([,.]{0,1})([\\S\\s]*)/$1\\[\n\t$2$3\n\\]$4/s}",
 			],
@@ -466,7 +466,7 @@
 		"Proof Draft":{
 			"prefix": ["\\proofdraft", "proofdraft"],
 			"body": [
-				"\\begin{proof}[Proof Draft]",
+				"\\begin{proof}[{\\color{red}Proof Draft}]",
 					"\t$TM_SELECTED_TEXT$0",
 				"\\end{proof}",
 				""
@@ -722,7 +722,7 @@
 		"Set definition":{
 			"prefix": ["\\setdef"],
 			"body": [
-				"\\setdef{$TM_SELECTED_TEXT$1}$0"
+				"\\setdef{$TM_SELECTED_TEXT$1} $0"
 			]
 		},
 		"In set":{
