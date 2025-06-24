@@ -1,0 +1,324 @@
+// Place your key bindings in this file to override the defaultsauto[]
+[
+    {
+        "key": "ctrl+enter",
+        "command": "-editor.action.insertLineAfter",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "f6",
+        "command": "workbench.action.debug.continue",
+        "when": "inDebugMode"
+    },
+    {
+        "key": "f5",
+        "command": "-workbench.action.debug.continue",
+        "when": "inDebugMode"
+    },
+    {
+        "key": "f6",
+        "command": "workbench.action.debug.start",
+        "when": "debuggersAvailable && !inDebugMode"
+    },
+    {
+        "key": "f5",
+        "command": "-workbench.action.debug.start",
+        "when": "debuggersAvailable && !inDebugMode"
+    },
+    {
+        "key": "f5",
+        "command": "workbench.action.tasks.build"
+    },
+    {
+        "key": "ctrl+shift+b",
+        "command": "-workbench.action.tasks.build"
+    },
+    {
+        "key": "ctrl+d",
+        "command": "editor.action.deleteLines",
+        "when": "textInputFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+shift+k",
+        "command": "-editor.action.deleteLines",
+        "when": "textInputFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+d",
+        "command": "-editor.action.addSelectionToNextFindMatch",
+        "when": "editorFocus"
+    },
+    {
+        "key": "ctrl+f4",
+        "command": "-workbench.action.closeActiveEditor"
+    },
+    {
+        "key": "ctrl+enter",
+        "command": "latex-workshop.build",
+        "when": "editorLangId =~ /latex|rsweave|jlweave/"
+    },
+    {
+        "key": "ctrl+l alt+b",
+        "command": "-latex-workshop.build",
+        "when": "config.latex-workshop.bind.altKeymap.enabled && editorLangId =~ /latex|rsweave|jlweave/"
+    },
+    {
+        "key": "alt+enter",
+        "command": "problems.action.showQuickFixes",
+        "when": "problemFocus"
+    },
+    {
+        "key": "ctrl+.",
+        "command": "-problems.action.showQuickFixes",
+        "when": "problemFocus"
+    },
+    {
+        "key": "alt+enter",
+        "command": "editor.action.quickFix",
+        "when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+.",
+        "command": "-editor.action.quickFix",
+        "when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+shift+up",
+        "command": "-cursorUpSelect",
+        "when": "textInputFocus"
+    },
+    {
+        "key": "ctrl+shift+down",
+        "command": "-cursorDownSelect",
+        "when": "textInputFocus"
+    },
+    {
+        "key": "ctrl+shift+down",
+        "command": "editor.action.moveLinesDownAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "alt+down",
+        "command": "-editor.action.moveLinesDownAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+shift+up",
+        "command": "editor.action.moveLinesUpAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "alt+up",
+        "command": "-editor.action.moveLinesUpAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    // LATEX
+    {
+        "key": "ctrl+m e",
+        "command": "editor.action.insertSnippet",
+        "when": "editorTextFocus && textInputFocus && editorLangId =~ /^latex$|^latex-expl3$|^rsweave$|^jlweave$|^pweave$/",
+        "args": {
+            "langId": "latex",
+            "name": "Display Equation"
+        }
+    },
+    {
+        "key": "ctrl+m e",
+        "command": "editor.action.insertSnippet",
+        "when": "editorTextFocus && textInputFocus && editorLangId =~ /^markdown$/",
+        "args": {
+            "langId": "markdown",
+            "name": "Display Equation"
+        }
+    },
+    {
+        "key": "ctrl+m v",
+        "command": "editor.action.insertSnippet",
+        "when": "editorTextFocus && textInputFocus && editorLangId =~ /^latex$|^latex-expl3$|^rsweave$|^jlweave$|^pweave$/",
+        "args": {
+            "langId": "latex",
+            "name": "Vertical Box (no page breaks)"
+        }
+    },
+    {
+        "key": "ctrl+m m",
+        "command": "editor.action.insertSnippet",
+        "when": "editorTextFocus && textInputFocus && editorLangId =~ /^latex$|^latex-expl3$|^rsweave$|^jlweave$|^pweave$/",
+        "args": {
+            "langId": "latex",
+            "name": "Inline Equation"
+        }
+    },
+    {
+        "key": "ctrl+m d", // "d" for "display"
+        "command": "editor.action.insertSnippet",
+        "when": "editorTextFocus && textInputFocus && editorLangId =~ /^latex$|^latex-expl3$|^rsweave$|^jlweave$|^pweave$/",
+        "args": {
+            "langId": "latex",
+            "name": "Convert inline to display equation"
+        }
+    },
+    {
+        "key": "ctrl+m i", // "i" for "inline"
+        "command": "editor.action.insertSnippet",
+        "when": "editorTextFocus && textInputFocus && editorLangId =~ /^latex$|^latex-expl3$|^rsweave$|^jlweave$|^pweave$/",
+        "args": {
+            "langId": "latex",
+            "name": "Convert display to inline equation"
+        }
+    },
+    // Lecture Notes
+    {
+        "key": "ctrl+m b",
+        "command": "editor.action.insertSnippet",
+        "when": "editorTextFocus && textInputFocus && editorLangId =~ /^latex$|^latex-expl3$|^rsweave$|^jlweave$|^pweave$/",
+        "args": {
+            "langId": "latex",
+            "name": "Blank"
+        }
+    },
+    {
+        "key": "ctrl+m a",
+        "command": "editor.action.insertSnippet",
+        "when": "editorTextFocus && textInputFocus && editorLangId =~ /^latex$|^latex-expl3$|^rsweave$|^jlweave$|^pweave$/",
+        "args": {
+            "langId": "latex",
+            "name": "Answer"
+        }
+    },
+    {
+        "key": "ctrl+i",
+        "command": "editor.action.insertSnippet",
+        "when": "editorTextFocus && textInputFocus && editorLangId =~ /^latex$|^latex-expl3$|^rsweave$|^jlweave$|^pweave$/",
+        "args": {
+            "langId": "latex",
+            "name": "Emphasis"
+        }
+    },
+    {
+        "key": "ctrl+b",
+        "command": "editor.action.insertSnippet",
+        "when": "editorTextFocus && textInputFocus && editorLangId =~ /^latex$|^latex-expl3$|^rsweave$|^jlweave$|^pweave$/",
+        "args": {
+            "langId": "latex",
+            "name": "Bold"
+        }
+    },
+    {
+        "key": "ctrl+t",
+        "command": "editor.action.insertSnippet",
+        "when": "editorTextFocus && textInputFocus && editorLangId =~ /^latex$|^latex-expl3$|^rsweave$|^jlweave$|^pweave$/",
+        "args": {
+            "langId": "latex",
+            "name": "Text"
+        }
+    },
+    // MARKDOWN
+    {
+        "key": "ctrl+m m",
+        "command": "editor.action.insertSnippet",
+        "when": "editorTextFocus && textInputFocus && editorLangId =~ /^markdown$/",
+        "args": {
+            "langId": "markdown",
+            "name": "Inline Equation"
+        }
+    },
+    {
+        "key": "ctrl+i",
+        "command": "editor.action.insertSnippet",
+        "when": "editorTextFocus && textInputFocus && editorLangId =~ /^markdown$/",
+        "args": {
+            "langId": "markdown",
+            "name": "Italicize"
+        }
+    },
+    {
+        "key": "ctrl+b",
+        "command": "editor.action.insertSnippet",
+        "when": "editorTextFocus && textInputFocus && editorLangId =~ /^markdown$/",
+        "args": {
+            "langId": "markdown",
+            "name": "Bold"
+        }
+    },
+    {
+        "key": "f5",
+        "command": "python.execInTerminal-icon"
+    },
+    {
+        "key": "ctrl+m",
+        "command": "-editor.action.toggleTabFocusMode"
+    },
+    {
+        "key": "ctrl+l ctrl+m",
+        "command": "-editor.action.toggleTabFocusMode",
+        "when": "textInputFocus && editorLangId =~ /^latex$|^latex-expl3$|^doctex$|^rsweave$|^jlweave$|^pweave$/"
+    },
+    {
+        "key": "ctrl+\\",
+        "command": "-workbench.action.splitEditor"
+    },
+    {
+      "key": "ctrl+k ctrl+m",
+      "command": "workbench.action.toggleMaximizedPanel",
+      "when": "inDebugRepl && panelAlignment == 'center' || problemFocus && panelAlignment == 'center' || terminalFocus && panelAlignment == 'center' || focusedView == 'workbench.panel.output' && panelAlignment == 'center' || inDebugRepl && panelPosition != 'bottom' && panelPosition != 'top' || problemFocus && panelPosition != 'bottom' && panelPosition != 'top' || terminalFocus && panelPosition != 'bottom' && panelPosition != 'top' || focusedView == 'workbench.panel.output' && panelPosition != 'bottom' && panelPosition != 'top'"
+    },
+    {
+      "key": "ctrl+shift+'",
+      "command": "-workbench.action.toggleMaximizedPanel",
+      "when": "inDebugRepl && panelAlignment == 'center' || problemFocus && panelAlignment == 'center' || terminalFocus && panelAlignment == 'center' || focusedView == 'workbench.panel.output' && panelAlignment == 'center' || inDebugRepl && panelPosition != 'bottom' && panelPosition != 'top' || problemFocus && panelPosition != 'bottom' && panelPosition != 'top' || terminalFocus && panelPosition != 'bottom' && panelPosition != 'top' || focusedView == 'workbench.panel.output' && panelPosition != 'bottom' && panelPosition != 'top'"
+    },
+    {
+      "key": "ctrl+k ctrl+m",
+      "command": "-workbench.action.toggleMaximizeEditorGroup",
+      "when": "editorPartMaximizedEditorGroup || editorPartMultipleEditorGroups"
+    },
+    {
+      "key": "ctrl+k ctrl+m",
+      "command": "workbench.action.toggleMaximizeEditorGroup"
+    },
+    {
+        "key": "ctrl+k p",
+        "command": "workbench.action.pinEditor",
+        "when": "!activeEditorIsPinned"
+    },
+    {
+        "key": "ctrl+k shift+enter",
+        "command": "-workbench.action.pinEditor",
+        "when": "!activeEditorIsPinned"
+    },
+    {
+        "key": "ctrl+k p",
+        "command": "workbench.action.unpinEditor",
+        "when": "activeEditorIsPinned"
+    },
+    {
+        "key": "ctrl+k shift+enter",
+        "command": "-workbench.action.unpinEditor",
+        "when": "activeEditorIsPinned"
+    },
+    {
+        "key": "ctrl+k ctrl+w",
+        "command": "-workbench.action.closeAllEditors"
+    },
+    {
+        "key": "ctrl+k ctrl+w",
+        "command": "workbench.action.closeActiveEditor"
+    },
+    {
+        "key": "ctrl+w",
+        "command": "-workbench.action.closeActiveEditor"
+    },
+    {
+        "key": "ctrl+k w",
+        "command": "-workbench.action.closeEditorsInGroup"
+    },
+    {
+        "key": "alt+left",
+        "command": "-workbench.action.previousEditor"
+    },
+    {
+        "key": "alt+right",
+        "command": "-workbench.action.nextEditor"
+    }
+]

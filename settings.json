@@ -1,0 +1,593 @@
+{
+    "[latex]": {
+        "editor.copyWithSyntaxHighlighting": false,
+        "editor.defaultFormatter": "James-Yu.latex-workshop"
+    },
+    "[python]": {
+        "editor.formatOnType": true
+    },
+    "accessibility.signals.taskCompleted": {
+        "sound": "on"
+    },
+    "better-comments.highlightPlainText": true,
+    "better-comments.tags": [
+        {
+            // !TeX LaTeX Workshop comments
+            "tag": "!TeX",
+            "backgroundColor": "transparent",
+            "color": "#66bb66",
+        },
+        {
+            // !LTeX LTeX comments
+            "tag": "!LTeX",
+            "backgroundColor": "transparent",
+            "color": "#8888ff",
+        },
+        {
+            // ! Alerts
+            // It is importatnt to put these after other items that start with "!" so that they take precedence. 
+            "tag": "!",
+            "backgroundColor": "transparent",
+            "bold": false,
+            "color": "#FF2D00",
+            "italic": false,
+            "strikethrough": false,
+            "underline": false
+        },
+        {
+            // ? Questions
+            "tag": "?",
+            "backgroundColor": "transparent",
+            "bold": false,
+            "color": "#3498DB",
+            "italic": false,
+            "strikethrough": false,
+            "underline": false
+        },
+        {
+            // // Deleted content
+            "backgroundColor": "transparent",
+            "bold": false,
+            "color": "#606060",
+            "italic": false,
+            "strikethrough": true,
+            "tag": [
+                "//",
+                "%",
+                "xxx"
+            ],
+            "underline": false
+        },
+        {
+            // TODO items
+            "tag": "todo",
+            "backgroundColor": "transparent",
+            "bold": false,
+            "color": "#FF8C00",
+            "italic": false,
+            "strikethrough": false,
+            "underline": false
+        },
+        {
+            // * Bullet points
+            "tag": [
+                "*",
+                "-"
+            ],
+            "backgroundColor": "transparent",
+            "bold": false,
+            "color": "#98C379",
+            "italic": false,
+            "strikethrough": false,
+            "underline": false
+        },
+        {
+            // # Section, subsection, and subsubsection headers
+            "tag": [
+                "╭",
+                "│",
+                "╰",
+                "⋘",
+                "#"
+            ],
+            "backgroundColor": "transparent",
+            "bold": true,
+            "color": "#68C",
+        },
+        {
+            // http Links
+            "tag": [
+                "http",
+                "www."
+            ],
+            "backgroundColor": "transparent",
+            "color": "#77a",
+            "italic": true,
+        },
+        {
+            // dryer-lint comments
+            "tag": "dryer-lint",
+            "backgroundColor": "transparent",
+            "color": "#8fd",
+        },
+    ],
+    "cmake.configureOnOpen": true,
+    "cmake.pinnedCommands": [
+        "workbench.action.tasks.configureTaskRunner",
+        "workbench.action.tasks.runTask"
+    ],
+    "cmake.showOptionsMovedNotification": false,
+    "console-ninja.featureSet": "Community",
+    "cSpell.customDictionaries": {
+        "matlab": {
+            "addWords": true,
+            "name": "matlab",
+            "path": "C:/Users/pwintz/AppData/Roaming/Code/User/cspell-dictionaries/matlab.txt",
+            "scope": "user"
+        },
+        "latex": {
+            "addWords": true,
+            "name": "latex",
+            "path": "C:/Users/pwintz/AppData/Roaming/Code/User/cspell-dictionaries/latex.txt",
+            "scope": "user"
+        },
+        "custom": true, // Enable the `custom` dictionary
+    },
+    "cSpell.languageSettings": [
+        {
+            "dictionaries": [
+                "matlab"
+            ],
+            "languageId": "matlab"
+        },
+        {
+            "dictionaries": [
+                "latex"
+            ],
+            "languageId": ["tex", "latex-expl3"]
+        },
+    ],
+    "cSpell.userWords": [
+        "addedblock",
+        "alph",
+        "Arcak",
+        "Arthrex",
+        "backstepping",
+        "Beamer",
+        "belowskip",
+        "biblio",
+        "cursoralph",
+        "deletedblock",
+        "dlnetwork",
+        "eqlabel",
+        "Goebel",
+        "Griffioen",
+        "Halmos",
+        "Heiner",
+        "Heiner's",
+        "Heun",
+        "Heun's",
+        "Inkscape",
+        "inputname",
+        "INUSD",
+        "INUSL",
+        "jspan",
+        "Kenna",
+        "Krasovskii",
+        "Kutta",
+        "latexindent",
+        "Lipschitz",
+        "Litz",
+        "ltex",
+        "Lyapunov",
+        "mathstodon",
+        "Memoryless",
+        "multicursors",
+        "ndxs",
+        "newcommand",
+        "Nonmissing",
+        "Nonpositive",
+        "nonscalar",
+        "Nonsparse",
+        "Obispo",
+        "pwintz",
+        "Quadcopter",
+        "Rafal",
+        "relu",
+        "replacedblock",
+        "Riccati",
+        "Runge",
+        "Sanfelice",
+        "Sanflice",
+        "SBCC",
+        "semicontinuous",
+        "softplus",
+        "Sonmez",
+        "Spyrotechnics",
+        "strjoin",
+        "Surim",
+        "Teel",
+        "tspan",
+        "UCSC",
+        "UGAS",
+        "USFA",
+        "Westmont",
+        "Wintz",
+        "Yasin",
+        "Zotero"
+    ],
+    "dev.containers.mountWaylandSocket": false,
+    "editor.accessibilitySupport": "off",
+    "editor.comments.ignoreEmptyLines": false,
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.cursorSurroundingLines": 4,
+    "editor.cursorWidth": 3,
+    "editor.find.autoFindInSelection": "multiline",
+    "editor.find.seedSearchStringFromSelection": "selection",
+    "editor.guides.bracketPairs": "active",
+    "editor.minimap.enabled": false,
+    "editor.quickSuggestions": {
+        "other": "off"
+    },
+    "editor.renderControlCharacters": true,
+    "editor.renderWhitespace": "all",
+    // Controls whether the editor should highlight matches similar to the selection. This doesn't seeem to have any effect.
+    "editor.selectionHighlight": false,
+    // Controls whether the editor will scroll using an animation.
+    "editor.smoothScrolling": true,
+    "editor.snippetSuggestions": "top",
+    "editor.suggest.localityBonus": true,
+    "editor.suggest.showStatusBar": true,
+    "editor.suggestSelection": "recentlyUsedByPrefix",
+    "editor.tabSize": 2,
+    "editor.wordWrap": "on",
+    "editor.wrappingIndent": "indent",
+    "errorLens.alignMessage": {
+        "end": 0,
+        "minimumMargin": 4,
+        "padding": [
+            0,
+            5
+        ],
+        "start": 25
+    },
+    "errorLens.enabledDiagnosticLevels": [
+        "error",
+        "warning",
+        "info"
+    ],
+    "errorLens.gutterEmoji": {
+        "error": "☠️",
+        "hint": "💭",
+        "info": "🔷"
+    },
+    "errorLens.gutterIconsEnabled": true,
+    "errorLens.gutterIconSet": "squareRounded",
+    "errorLens.margin": "3ch",
+    "errorLens.messageTemplate": "$message ($source: $code)",
+    "errorLens.statusBarIconsEnabled": true,
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    "extensions.ignoreRecommendations": true,
+    "files.associations": {
+        "*.cls": "latex",
+        "*.sty": "latex"
+    },
+    "files.autoSave": "onFocusChange",
+    "files.exclude": {
+        "**/*.4ct": true,
+        "**/*.4tc": true,
+        "**/*.aux": true,
+        "**/*.fdb_latexmk": true,
+        "**/*.idv": true,
+        "**/*.lg": true,
+        "**/*.synctex.gz": true,
+        "**/*.tmp": true,
+        "**/*.xref": true
+    },
+    "git.openRepositoryInParentFolders": "never",
+    "github.copilot.enable": {
+        "*": false,
+        "latex": false,
+        "markdown": false,
+        "plaintext": false,
+        "scminput": false
+    },
+    "interactiveWindow.executeWithShiftEnter": true,
+    "javascript.updateImportsOnFileMove.enabled": "never",
+    // ╭────────────────────────────────────────────╮
+    // │ ╭────────────────────────────────────────╮ │
+    // │ │             LaTeX Workshop             │ │
+    // │ ╰────────────────────────────────────────╯ │
+    // ╰────────────────────────────────────────────╯
+    "latex-workshop.bibtex-fields.sort.enabled": true,
+    "latex-workshop.bind.altKeymap.enabled": true,
+    "latex-workshop.formatting.latex": "latexindent",
+    "latex-workshop.hover.preview.cursor.enabled": false,
+    "latex-workshop.hover.preview.enabled": false,
+    "latex-workshop.intellisense.package.dirs": [
+        "packages",
+        "%WORKSPACE_FOLDER%/packages"
+    ],
+    "latex-workshop.intellisense.package.extra": [
+        "pwintz_configuration",
+        "lecture_notes_setup",
+        "pwintz_homework",
+        "pwintz_definitions"
+    ],
+    "latex-workshop.intellisense.update.aggressive.enabled": true,
+    // Turn off automatically restarting builds on failure, since that rarely works.
+    "latex-workshop.latex.autoBuild.cleanAndRetry.enabled": false,
+    "latex-workshop.latex.clean.subfolder.enabled": true,
+    // ⋘────────── Set the LaTeX output folder ──────────⋙
+    "latex-workshop.latex.outDir": "%DIR%/out_dir",
+    "overleaf-workshop.compileOutputFolderName": "out_dir",
+    // "latex-workshop.latex.external.build.args": [
+    //     "-interaction=nonstopmode"
+    // ],
+    // "latex-workshop.latex.recipes": [
+    //     {
+    //         "name": "latexmk 🔃",
+    //         "tools": [
+    //             "latexmk"
+    //         ]
+    //     },
+    //     {
+    //         "name": "latexmk (latexmkrc)",
+    //         "tools": [
+    //             "latexmk_rconly"
+    //         ]
+    //     },
+    //     {
+    //         "name": "latexmk (lualatex)",
+    //         "tools": [
+    //             "lualatexmk"
+    //         ]
+    //     },
+    //     {
+    //         "name": "pdflatex ➞ bibtex ➞ pdflatex × 2",
+    //         "tools": [
+    //             "pdflatex",
+    //             "bibtex",
+    //             "pdflatex",
+    //             "pdflatex"
+    //         ]
+    //     }
+    // ],
+    // "latex-workshop.latex.tools": [
+    //     {
+    //         "args": [
+    //             "-synctex=1",
+    //             "-interaction=nonstopmode",
+    //             "-file-line-error",
+    //             "-pdf",
+    //             "-outdir=%OUTDIR%",
+    //             "%DOC%"
+    //         ],
+    //         "command": "latexmk",
+    //         "env": {},
+    //         "name": "latexmk"
+    //     },
+    //     {
+    //         "args": [
+    //             "-synctex=1",
+    //             "-interaction=nonstopmode",
+    //             "-file-line-error",
+    //             "-lualatex",
+    //             "-outdir=%OUTDIR%",
+    //             "%DOC%"
+    //         ],
+    //         "command": "latexmk",
+    //         "env": {},
+    //         "name": "lualatexmk"
+    //     },
+    //     {
+    //         "args": [
+    //             "-synctex=1",
+    //             "-interaction=nonstopmode",
+    //             "-file-line-error",
+    //             "-xelatex",
+    //             "-outdir=%OUTDIR%",
+    //             "%DOC%"
+    //         ],
+    //         "command": "latexmk",
+    //         "env": {},
+    //         "name": "xelatexmk"
+    //     },
+    //     {
+    //         "args": [
+    //             "%DOC%"
+    //         ],
+    //         "command": "latexmk",
+    //         "env": {},
+    //         "name": "latexmk_rconly"
+    //     },
+    //     {
+    //         "args": [
+    //             "-synctex=1",
+    //             "-interaction=nonstopmode",
+    //             "-file-line-error",
+    //             "%DOC%"
+    //         ],
+    //         "command": "pdflatex",
+    //         "env": {},
+    //         "name": "pdflatex"
+    //     },
+    //     {
+    //         "args": [
+    //             "%DOCFILE%"
+    //         ],
+    //         "command": "bibtex",
+    //         "env": {},
+    //         "name": "bibtex"
+    //     },
+    //     {
+    //         "args": [
+    //             "-e",
+    //             "knitr::opts_knit$set(concordance = TRUE); knitr::knit('%DOCFILE_EXT%')"
+    //         ],
+    //         "command": "Rscript",
+    //         "env": {},
+    //         "name": "rnw2tex"
+    //     },
+    //     {
+    //         "args": [
+    //             "-e",
+    //             "using Weave; weave(\"%DOC_EXT%\", doctype=\"tex\")"
+    //         ],
+    //         "command": "julia",
+    //         "env": {},
+    //         "name": "jnw2tex"
+    //     },
+    //     {
+    //         "args": [
+    //             "-e",
+    //             "using Weave; weave(\"%DOC_EXT%\", doctype=\"texminted\")"
+    //         ],
+    //         "command": "julia",
+    //         "env": {},
+    //         "name": "jnw2texmintex"
+    //     },
+    //         "args": [
+    //             "--synctex",
+    //             "--keep-logs",
+    //             "%DOC%.tex"
+    //         ],
+    //         "command": "tectonic",
+    //         "env": {},
+    //         "name": "tectonic"
+    //     }
+    // ],
+    // ╭───────────────────────────────────────────────────╮
+    // │             LaTeX Workshop PDF Viewer             │
+    // ╰───────────────────────────────────────────────────╯
+    "latex-workshop.synctex.indicator": "circle",
+    "latex-workshop.view.outline.floats.caption.enabled": false,
+    "latex-workshop.view.outline.sync.viewer": true,
+    "latex-workshop.view.pdf.color.dark.backgroundColor": "#809080",
+    "latex-workshop.view.pdf.color.dark.pageBorderColor": "#809080",
+    "latex-workshop.view.pdf.color.light.backgroundColor": "#809080",
+    "latex-workshop.view.pdf.color.light.pageBorderColor": "#809080",
+    "latex-workshop.view.pdf.internal.synctex.keybinding": "double-click",
+    "latex-workshop.view.pdf.invertMode.brightness": 0,
+    "latex-workshop.view.pdf.toolbar.hide.timeout": 0.4,
+    "latex-workshop.view.pdf.viewer": "tab",
+    "livePreview.autoRefreshPreview": "On Changes to Saved Files",
+    "livePreview.openPreviewTarget": "External Browser",
+    "ltex.additionalRules.enablePickyRules": true,
+    "ltex.bibtex.fields": {
+        "abstract": false
+    },
+    // "ltex.enabled": [
+    //     "bibtex",
+    //     "context",
+    //     "context.tex",
+    //     "html",
+    //     "latex",
+    //     "markdown"
+    // ],
+    "ltex.latex.commands": {
+        "\\cite{}": "ignore",
+        "\\code{}": "ignore",
+        "\\lstinputlisting{}": "ignore",
+        "\\nocite{}": "ignore",
+        "\\problem{}": "ignore",
+        "\\subproblem{}": "ignore"
+    },
+    "ltex.statusBarItem": true,
+    // ╭──────────────────────────────────────────────────╮
+    // │ ╭──────────────────────────────────────────────╮ │
+    // │ │             Past Image Extension             │ │
+    // │ ╰──────────────────────────────────────────────╯ │
+    // ╰──────────────────────────────────────────────────╯
+    "pasteImage.basePath": "${currentFileDir}/THIS_ISNT_USED?",
+    "pasteImage.encodePath": "none",
+    "pasteImage.filePathConfirmInputBoxMode": "onlyName",
+    "pasteImage.insertPattern": "\\includegraphics{pasted-images/${imageFileName}}",
+    "pasteImage.path": "${currentFileDir}/pasted-images",
+    "pasteImage.prefix": "\\includegraphics[]{",
+    "pasteImage.suffix": "}",
+    "remote.autoForwardPortsSource": "hybrid",
+    "security.allowedUNCHosts": [
+        "wsl.localhost",
+        "wsl$"
+    ],
+    "security.workspace.trust.untrustedFiles": "open",
+    "tabout.charactersToTabOutFrom": [
+        {
+            "close": "]",
+            "open": "["
+        },
+        {
+            "close": "}",
+            "open": "{"
+        },
+        {
+            "close": ")",
+            "open": "("
+        },
+        {
+            "close": "'",
+            "open": "'"
+        },
+        {
+            "close": "\"",
+            "open": "\""
+        },
+        {
+            "close": ">",
+            "open": "<"
+        },
+        {
+            "close": "`",
+            "open": "`"
+        },
+    ],
+    // ╭──────────────────────────────────────╮
+    // │ ╭──────────────────────────────────╮ │
+    // │ │             Terminal             │ │
+    // │ ╰──────────────────────────────────╯ │
+    // ╰──────────────────────────────────────╯
+    "terminal.explorerKind": "external",
+    "terminal.external.windowsExec": "C:\\Program Files\\Git\\git-bash.exe",
+    "terminal.integrated.commandsToSkipShell": [
+        "matlab.interrupt"
+    ],
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "terminal.integrated.defaultProfile.windows": "Git Bash",
+    "terminal.integrated.env.windows": {},
+    "terminal.integrated.fastScrollSensitivity": 10,
+    "terminal.integrated.tabs.title": "${process}: ${cwd}",
+    // ╭───────────────────────────────────────────╮
+    // │ ╭───────────────────────────────────────╮ │
+    // │ │             Editor Window             │ │
+    // │ ╰───────────────────────────────────────╯ │
+    // ╰──────────────────────────────────────────────────╯
+    "window.density.editorTabHeight": "compact",
+    "window.openFoldersInNewWindow": "on",
+    "workbench.editor.alwaysShowEditorActions": true,
+    // Make double clicking a tab make the editor file the window, instead of just shrinking the other editors.
+    "workbench.editor.doubleClickTabToToggleEditorGroupSizes": "maximize",
+    // Open documents as "previews" that are replaced by the next document opened unless the file is double clicked.
+    "workbench.editor.enablePreview": true,
+    "workbench.editor.highlightModifiedTabs": true,
+    "workbench.editor.pinnedTabsOnSeparateRow": true,
+    "workbench.editor.splitInGroupLayout": "vertical",
+    // ╭─────────────────────────────────────────╮
+    // │ ╭─────────────────────────────────────╮ │
+    // │ │             Color Theme             │ │
+    // │ ╰─────────────────────────────────────╯ │
+    // ╰─────────────────────────────────────────╯
+    "workbench.colorTheme": "Tomorrow Night Bright",
+    "workbench.preferredDarkColorTheme": "Tomorrow Night Bright",
+    "workbench.preferredHighContrastColorTheme": "GitHub Light High Contrast",
+    "workbench.preferredHighContrastLightColorTheme": "GitHub Light High Contrast",
+    "workbench.preferredLightColorTheme": "GitHub Light High Contrast",
+    "window.autoDetectHighContrast": false,
+    // ╭───────────────────────────────────╮
+    // │ ╭───────────────────────────────╮ │
+    // │ │             Misc.             │ │
+    // │ ╰───────────────────────────────╯ │
+    // ╰───────────────────────────────────╯
+    "telemetry.telemetryLevel": "error", // Don't send general usage data to big daddy Microsoft.
+}
