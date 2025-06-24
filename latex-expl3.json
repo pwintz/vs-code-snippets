@@ -1,0 +1,1076 @@
+{
+	// Place your snippets for latex-expl3 here. Each snippet is defined under a snippet name and has a prefix, body and 
+	// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the 
+	// same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }
+	
+  // ╭──────────────────────────────────────────────────────╮
+  // │ ╭──────────────────────────────────────────────────╮ │
+  // │ │             LaTeX3 Programming Layer             │ │
+  // │ ╰──────────────────────────────────────────────────╯ │
+  // ╰──────────────────────────────────────────────────────╯
+  "Enable LaTeX3 Programming": {
+    "prefix": ["\\enableLaTeX3", "\\ExplSyntaxOn"],
+    "body": [
+      "${1|\\usepackage{expl3},\\RequirePackage{expl3}, |}",
+      "\\ExplSyntaxOn % Enable LaTeX3 Programming layer",
+      "\t$TM_SELECTED_TEXT$0",
+      "\\ExplSyntaxOff% Disable LaTeX3 Programming layer"
+    ],
+    "description": "Enable bootstrapping of the LaTeX3 programming layer in LaTeX2e. Select \"usepackage\" if used in a .tex file and \"RequirePackage\" if used in a .sty file."
+  },
+  "Declare LaTeX3 Variable": {
+    "prefix": ["\\L3 variable"],
+    "body":  [
+      "%  Scope: ${1|local,global,constant|}",
+      "% Access: ${2|private,public|}",
+      "% Module: $3",
+      // Other types available: "regex" regular expression; "muskip" math mode “rubber” lengths; "fparray" fixed-size vector of floating-point values; "intarray" fixed-size vector of integer values; "seq" a sequence with access at both ends for use as a queue, list, or stacks;
+
+      "%   Type: ${5|boolean,floating-point,integer,comma-separated list|}",
+      "% Description: $4",
+      "\\\\${5/(?:(boolean)|(floating-point)|(integer)|(comma-separated list))/${1:+bool}${2:+fp}${3:+int}${4:+clist}/}_new \\\\${1/(?:(l)ocal|(g)lobal|(c)onstant)/$1$2$3/}${2/(?:(private)|(public))/${1:+__}${2:+_}/g}${3:module}_${4:description}_${5/(?:(boolean)|(floating-point)|(integer)|(comma-separated list))/${1:+bool}${2:+fp}${3:+int}${4:+clist}/g}",
+      "\\\\${5/(?:(boolean)|(floating-point)|(integer)|(comma-separated list))/${1:+bool}${2:+fp}${3:+int}${4:+clist}/}_${6|set,gset|} \\\\${1/(?:(l)ocal|(g)lobal|(c)onstant)/$1$2$3/}${2/(?:(private)|(public))/${1:+__}${2:+_}/g}${3:module}_${4:description}_${5/(?:(boolean)|(floating-point)|(integer)|(comma-separated list))/${1:+bool}${2:+fp}${3:+int}${4:+clist}/g} ${7:value}"
+    ],
+    "description": ""
+  },
+  "LaTeX3 Function": {
+    "prefix": ["\\L3 function"],
+    "body": [
+      "% Access: ${1|private,public|}",
+      "% Argument 1: ${5|n: unexpanded token or braced token list,N: single token,p: primitive TeX parameter,T/F: true/false,c: character string used as a command name,V: value of variable|}",
+      "% Argument 2: ${6|n: unexpanded token or braced token list,N: single token,p: primitive TeX parameter,T/F: true/false,c: character string used as a command name,V: value of variable|}",
+      "% Argument 3: ${7|n: unexpanded token or braced token list,N: single token,p: primitive TeX parameter,T/F: true/false,c: character string used as a command name,V: value of variable|}",
+      // "% Argument 4: ${8|n: unexpanded token or braced token list,N: single token,p: primitive TeX parameter,T/F: true/false,c: character string used as a command name,V: value of variable|}",
+      "\\\\${1/(?:(private)|(public))/${1:+__}/g}${3:module}_${4:description}:${5/(.).*/$1/}${6/(.).*/$1/}${7/(.).*/$1/}"
+    ],
+    "description": ""
+  },
+  "LaTeX3 Type": {
+    "prefix": ["\\L3 type", "L3_type"],
+    "body": [
+      // "${1/${1|boolean,floating-point,integer,comma-separated list|}/./a/}",
+      // "${2://${regex_group_number:+inserted text}/gumi}}"
+      "${1|bool,fp,int,clist|}"
+    ],
+    "description": "Select boolean, floating-point, integer,  or comma-separated list"
+
+    // All types in LaTeX3:
+    //
+    //    bitset a set of bits (a string made up of a series of 0 and 1 tokens that are accessed by position).
+    //    clist Comma separated list.
+    //    dim “Rigid” lengths.
+    //    fp Floating-point values;
+    //    int Integer-valued count register.
+    //    muskip “Rubber” lengths for use in mathematics.
+    //    skip “Rubber” lengths.
+    //    str String variables: contain character data.
+    //    tl Token list variables: placeholder for a token list.
+    //
+    // Applying V-type or v-type expansion to variables of one of the above types is supported, while it is not supported for the following variable types:
+    //
+    //    bool Either true or false.
+    //    box Box register.
+    //    coffin A “box with handles” — a higher-level data type for carrying out box alignment operations.
+    //    flag Non-negative integer that can be incremented expandably.
+    //    fparray Fixed-size array of floating point values intarray Fixed-size array of integers.
+    //    ior/iow An input or output stream, for reading from or writing to, respectively.
+    //    prop Property list: analogue of dictionary or associative arrays in other languages.
+    //    regex Regular expression.
+    //    seq “Sequence”: a data type used to implement lists (with access at both ends) and stacks
+  },
+  "L3 Local Temporary Variable": {
+    "prefix": ["\\l_temp_"],
+    "body": [
+      "\\l_tmp${2|a,b|}_${1|bitset,clist,dim,fp,int,muskip,skip,str,tl,bool,box,coffin,flag,fparray,ior,prop,regex,seq|}"
+    ],
+    "description": ""
+  },
+  // ╭──────────────────────────────────────────────────────────────────────────────╮
+  // │             LaTeX3 Control Sequences and Functions (Section 4.3)             │
+  // ╰──────────────────────────────────────────────────────────────────────────────╯
+  "L3 Argument Specifier": {
+    "prefix": ["L3_argument_specifier", "L3_argument_specifier"],
+    "body": [
+      "${1|N,n,c,V,v,x,f,T,F,TF,p|}"
+    ],
+    "description": [
+      "N: A single token without braces. No manipulation.\n",
+      "n: A set of tokens given in braces. No manipulation.\n",
+      "c: A csname given in braces (without \"\\\").\n", 
+      "V: Value of variable, given as a single token (like N).\n", 
+      "v: Value of variable, given as a csname in bracket (like c).\n", 
+      // "o: Expand Once. In general, the V and v specifiers are favored over o for recovering stored information. However, o is useful for correctly processing information with delimited argument", 
+      "x: eXhaustive expansion of every token in the argument.\n", 
+      // "e: The e specifier is in many respects identical to x, but uses \\expanded primitive. Parameter character usually #) in the argument need not be doubled. Functions which feature an e-type argument may be expandable", 
+      "f: full expansion, and in contrast to x stops at the first nonexpandable token.\n", 
+      "T,F,TF: Conditional cases.\n", 
+      "p: TeX Parameters. Normally this will be used for delimited functions as expl3 provides better methods for creating simple sequential argument.", 
+    ]
+  },
+  // "L3 New Control Sequence (AKA Function)": {
+  //   "prefix": ["\\cs_new", "\\new_control_sequence", "\\new_function"],
+  //   "body": [
+  //     "\\cs_new:Npn \\\\${1:module}_${2:description}:${3:L3_argument_specifier} ${4:parameters} {${5:code}}",
+  //     "$0"
+  //   ],
+  //   "description": "Creates ⟨function⟩ to expand to ⟨code⟩ as replacement text. Within the ⟨code⟩, the ⟨parameters⟩ (#1, #2, etc.) will be replaced by those absorbed by the function. The definition is global and an error results if the ⟨function⟩ is already defined. "
+  // },
+  "L3 New Control Sequence/Function": {
+    "prefix": ["\\cs_new", "\\new_control_sequence", "\\new_function", "\\create_cs"],
+    "body": [
+      "\\cs_new:Npn \\\\${1:module}_${2:description}:${3:L3_argument_specifier} {${4:code}}",
+      "$0"
+    ],
+    "description": "Creates ⟨function⟩ to expand to ⟨code⟩ as replacement text. The ⟨parameters⟩ (#1, #2, etc.) are automatically identified based on what occurs in the ⟨code⟩. They will be replaced by those absorbed by the function. The definition is global and an error results if the ⟨function⟩ is already defined."
+  },
+  "L3 Copy Control Sequence/Function to New Control Sequence": {
+    "prefix": ["\\cs_new_eq", "\\cs_copy_new"],
+    "body": [
+      "\\cs_new_eq:NN \\\\${1:new_cs_name} \\\\${2:existing_cs_name}"
+    ],
+    "description": "Globally creates ⟨control sequence1⟩ and sets it to have the same meaning as ⟨control sequence2⟩ or ⟨token⟩. The second control sequence may subsequently be altered without affecting the copy."
+  },
+  "L3 Create and Set Control Sequence/Function": {
+    "prefix": ["\\cs_set", "\\create_and_set_cs"],
+    "body": [
+      "\\cs_set:Nn \\\\${1:new_cs_name} {${2:code}}"
+    ],
+    "description": "Globally creates ⟨control sequence1⟩ and sets it to have the same meaning as ⟨control sequence2⟩ or ⟨token⟩. The second control sequence may subsequently be altered without affecting the copy."
+  },
+  "L3 Copy Control Sequence/Function to Existing Control Sequence": {
+    "prefix": ["\\cs_set_equal", "\\cs_copy_to_existing"],
+    "body": [
+      "\\cs_set_eq:NN \\\\${1:target_cs_name} \\\\${2:source_cs_name}"
+    ],
+    "description": "Sets ⟨control sequence1⟩ to have the same meaning as ⟨control sequence2⟩ (or ⟨token⟩). The second control sequence may subsequently be altered without affecting the copy. The assignment of a meaning to the ⟨control sequence1⟩ is restricted to the current TEX group level."
+  },
+  "L3 Delete Control Sequence": {
+    "prefix": ["\\cs_delete", "\\cs_undefine"],
+    "body": [
+      "\\cs_undefine:N \\\\${cs_name}"
+    ],
+    "description": "Sets ⟨control sequence⟩ to be globally undefined."
+  },
+  "L3 Use Control Sequence": {
+    "prefix": ["\\cs_use", "\\cs_expand"],
+    "body": [
+      "\\use:c {${cs_name}}"
+    ],
+    "description": "Expands the ⟨control sequence name⟩ until only characters remain, and then converts this into a control sequence. This process requires two expansions. As in other c-type arguments the ⟨control sequence name⟩ must, when fully expanded, consist of character tokens, typically a mixture of category code 10 (space), 11 (letter) and 12 (other)."
+  },
+  "L3 Use Control Sequence If It Exists": {
+    "prefix": ["\\cs_use_if_exists", "\\cs_expand_if_exists", "\\if_cs_exists_use"],
+    "body": [
+      "\\cs_if_exist_use:c {${cs_name}}"
+    ],
+    "description": "Expands the ⟨control sequence name⟩ until only characters remain, and then converts this into a control sequence. This process requires two expansions. As in other c-type arguments the ⟨control sequence name⟩ must, when fully expanded, consist of character tokens, typically a mixture of category code 10 (space), 11 (letter) and 12 (other)."
+  },
+  // ╭──────────────────────────────────────╮
+  // │             LaTeX 3 Loops            │
+  // ╰──────────────────────────────────────╯
+  // See also Booleans (Chapter 9)
+  "L3 Comma Separated - For each": {
+    "prefix": ["\\L3clistForEach", "\\clist_map_inline"],
+    "body": [
+      "\\clist_map_inline:nn { ${1:comma separated list} } { ${2:output, using \"#1\" for current list value} }"
+    ],
+  },
+  "L3: Repeat tokens": {
+    "prefix": ["\\prg_replicate", "\\repeat", "\\duplicate"],
+    "body": [
+      "\\prg_replicate:nn {${1:integer expression}} {${2:tokens}}"
+    ],
+    "description": "Repeat the given tokens a given number of times."
+  },
+  // ╭──────────────────────────────────────────────────────╮
+  // │             LaTeX3 Key-Value Definitions             │
+  // ╰──────────────────────────────────────────────────────╯
+  "LaTeX3 Parse Key-value Pairs": {
+    "prefix": ["\\keys_set", "\\parse_keys"], 
+    "body": [
+      "\\keys_set:nn {${1:module}} {${2:keyval list}}"
+    ]
+  },
+  "LaTeX3 Insert Key-Value Definitions": {
+    "prefix": ["\\keys_define", "\\define_keys", "\\kvoptions - LaTeX3", "\\keyvalueoptions - LaTeX3"],
+    "body": [
+      "\\RequirePackage{l3keys2e}% To use \\keys_define. <- Move to start of file.",
+      "\\keys_define:nn { ${1:module_name} }{% Define list of key-value options",
+        "\t$0",
+        // "\tkey-one .code:n = code including parameter #1,",
+        // "\tkey-two .tl_set:N = \\l_my_module_store_tl",
+      "}", 
+      "% To parse keys passed as package options. See https://tex.stackexchange.com/a/15840/153678",
+      "% \\ProcessKeysOptions { ${1:module_name} }"
+    ],
+  },
+  // "LaTeX3 Insert Key": {
+  //   "prefix": ["\\defineKey - LaTeX3", "\\define_key"],
+  //   "body": [
+  //     "% Key: ${1:key_name}", 
+  //     "% Property type: ${2|choices,code,default,set boolean,set boolean negation|}",
+  //     "${1:key_name} ${2/(?:(choices)|(code)|(default)|(set boolean$)|(set boolean negation))/${1:+\\\\defineChoicesKey}${2:+\\\\defineCodeKey}${3:+\\\\defineDefaultKey}${4:+\\\\defineSetBooleanKey}}${5:+\\\\defineSetBooleanNegationKey}/},$0"
+  //   ],
+  // },
+  "LaTeX3 Insert Choices Key": {
+    "prefix": ["\\defineChoicesKey"],
+    "body": [
+      "% ───── Define Code Key-Value Option: \"${1:key_name}\" ─────",
+      "${1:key_name} .choices:nn = {${2:choices}} {${3:Value:~\\l_keys_choice_tl,~position:\\l_keys_choice_int}},"
+    ],
+  },
+  "LaTeX3 Insert Code Key": {
+    "prefix": ["\\defineCodeKey"],
+    "body": [
+      "% ───── Define Code Key-Value Option: \"${1:key_name}\" ─────",
+      "${1:key_name} .code:n = {${2:code with #1 the value given for this key}},"
+    ],
+  },
+  "LaTeX3 Insert Default Key": {
+    "prefix": ["\\defineDefaultKey"],
+    "body": [
+      "${1:key_name} .default:n = {${2:default_value}},"
+    ],
+  },
+  "LaTeX3 Insert Set-Boolean Key": {
+    "prefix": ["\\defineSetBooleanKey"],
+    "body": [
+      "% ───── Define Boolean Key-Value Option: \"${1:key_name}\" ─────",
+      "${1:key_name} .bool_set:N = \\\\${2:boolean_name},"
+    ],
+  },
+  "LaTeX3 Insert Set Boolean Negation Key": {
+    "prefix": ["\\defineSetBooleanNegationKey", "\\defineSetBooleanInverseKey"],
+    "body": [
+      "% ───── Define Negated Boolean Key-Value Option: \"${1:key_name}\" ─────",
+      "${1:key_name} .bool_set_inverse:N = \\\\${2:boolean_name},"
+    ],
+  },
+  "LaTeX3 Define String Key": {
+    "prefix": ["\\defineStringKey", "\\addStringKey"],
+    "body": [
+      "% ───── Define String Key-Value Option: \"${1:key_name}\" ─────",
+      // "% Key: ${1:key_name}", 
+      // "% Command sequence: \\\\${2:cs}",
+      // "% Default value: ${3:default_value}",
+      "${1:key_name} .str_set:N = {\\\\${2:cs}},",
+      // "${1:key_name} .default:n = {${3:default_value}},", 
+      // To set the default value, put this before the the start of \keys_define: \cs_new:Npn \\\\${2:cs} {[Default value]}
+
+      "$0"
+    ],
+  },
+  "LaTeX3 Define Boolean Key": {
+    "prefix": ["\\defineBooleanKey", "\\addBooleanKey"],
+    "body": [
+      "% ───── Define Boolean Key-Value Option: \"${1:key_name}\" ─────",
+      "${1:key} .bool_set:N = \\\\${2:boolean_cs},",
+      // "${1:boolean_name} .default:n = {${3:default_value}},", 
+      "% To set the default value, put this before the the start of \\keys_define: \\bool_set:Nn \\\\${2:boolean_cs}   { \\c_${3|true,false|}_bool }",
+      "$0"
+    ],
+  },
+  "LaTeX3 Define Comma List Variable Key": {
+    "prefix": ["\\defineCommaSeparatedListKey", "\\addCommaSeparatedListKey"],
+    "body": [
+      "% ───── Define Comma Separated List (clist) Key-Value Option: \"${1:key_name}\" ─────",
+      "${1:key} .clist_set:N = {\\\\${2:clist_var_name}},",
+      "$0"
+    ],
+  },
+  "L3 Define Key-Value Default Value": {
+    "prefix": ["\\defineKeyValueDefault", "\\addKeyValueDefault"],
+    "body": [
+      "${1:key} .default:n = ${2:default~value},",
+      "$0"
+    ],
+  },
+  "L3 Key-Value Value Required": {
+    "prefix": [".value_required", "\\defineKeyValueValueRequired", "\\setKeyValueRequireValue"],
+    "body": [
+      "${1:key} .value_required:n = true,",
+      "$0"
+    ],
+  },
+  "L3 Key-Value Value Forbidden": {
+    "prefix": [".value_forbidden", "\\defineKeyValueValueForbidden", "\\setKeyValueForbiddenValue"],
+    "body": [
+      "${1:key} .value_forbidden:n = true,",
+      "$0"
+    ],
+  },
+  // ╭──────────────────────────────────────────────────────╮
+  // │             Booleans (bool) (Chapter 9)              │
+  // ╰──────────────────────────────────────────────────────╯
+  "L3 New Boolean": {
+    "prefix": ["\\bool_new"],
+    "body": [
+      "\\bool_new:N \\\\${1:boolean_name}"
+    ],
+  },
+  "L3: Set Boolean to Value": {
+    "prefix": ["\\bool_set", "\\setBooleanToValue"],
+    "body": [
+      "\\bool_set:Nn \\\\${1:boolean_name} {${2:value}}"
+    ],
+  },
+  "L3: Set BooleanEqual to Another Boolean": {
+    "prefix": ["\\bool_set_eq", "\\setBooleanEqualToAnotherBoolean"],
+    "body": [
+      "\\bool_set_eq:NN \\\\${1:boolean_to_set} \\\\${1:boolean_to_copy}"
+    ],
+  },
+  "L3: Set Boolean to True": {
+    "prefix": ["\\bool_set_true", "\\setBooleanToTrue"],
+    "body": [
+      "\\bool_set_true:N \\\\${1:boolean_name}"
+    ],
+  },
+  "L3: Set Boolean to False": {
+    "prefix": ["\\bool_set_false", "\\setBooleanToFalse"],
+    "body": [
+      "\\bool_set_false:N \\\\${1:boolean_name}"
+    ],
+  },
+  "L3: Toggle Boolean": {
+    "prefix": ["\\bool_set_inverse", "\\setBooleanToNegation", "\\toggleBooleanValue"],
+    "body": [
+      "\\bool_set_inverse:N \\\\${1:boolean_name}"
+    ],
+  },
+  "L3: If Boolean": {
+    "prefix": ["\\bool_if", "\\ifBoolean", "\\booleanIfThen"],
+    "body": [
+      "\\bool_if:N${2|TF,T,F|} \\\\${1:boolean_name} ${2/^(T)?(F)?$/${1:+\n\t{\n\t\ttrue code\n\t\\}}${2:+\n\t{\n\t\tfalse code\n\t\\}}/}"
+    ],
+  },
+  "L3: Boolean to String": {
+    "prefix": ["\\bool_to_string"],
+    "body": [
+      "\\bool_to_str:N \\\\${1:boolean_name}"
+    ],
+  },
+  "L3: Boolean True Constant ": {
+    "prefix": ["\\true", "\\c_true_bool"],
+    "body": [
+      "\\c_true_bool"
+    ],
+  },
+  "L3: Boolean False Constant ": {
+    "prefix": ["\\false", "\\c_false_bool"],
+    "body": [
+      "\\c_false_bool"
+    ],
+  },
+  // ⋘────────── Boolean Expressions (Section 9.3) ──────────⋙
+  // bool_lazy_all
+  // bool_lazy_and
+  // bool_lazy_any
+  // bool_lazy_or
+  // bool_not_p
+  // bool_xor
+  // ⋘────────── Boolean - Logical loops (Section 9.4) ──────────⋙
+  // bool_do_until
+  // bool_do_while
+  // bool_until_do
+  // bool_while_do
+  // bool_case
+  // ╭────────────────────────────────────────────────────────────╮
+  // │             LaTeX3 Strings (str)  (Chapter 17)             │
+  // ╰────────────────────────────────────────────────────────────╯
+  // ⋘────────── Creation ──────────⋙
+  "L3 New String": {
+    "prefix": ["\\str_new"],
+    "body": [
+      "\\str_new:N \\\\${1:string_var_name}"
+    ],
+    "description": "Creates a new ⟨str var⟩ or raises an error if the name is already taken. The declaration is global. The ⟨str var⟩ is initially empty"
+  },
+  "L3 Set String": {
+    "prefix": ["\\str_set"],
+    "body": [
+      "\\str_set:Nn \\\\${1:string_var_name} {${2:token_list}}"
+    ],
+    "description": "Converts the ⟨token list⟩ to a ⟨string⟩, and stores the result in ⟨str var⟩."
+  },
+  // ⋘────────── Adding Data to Strings (Section 17.2) ──────────⋙
+  "L3 Put Into String Left": {
+    "prefix": ["\\str_put_left", "\\str_append_to_left", "\\str_prepend"],
+    "body": [
+      "\\str_put_left:Nn \\\\${1:string_var_name} {${2:token_list}}"
+    ],
+    "description": "Converts the ⟨token list⟩ to a ⟨string⟩, and prepends the result to ⟨str var⟩. The current contents of the ⟨str var⟩ are not automatically converted to a string"
+  },
+  "L3 Put Into String Right": {
+    "prefix": ["\\str_put_right", "\\str_append_to_right", "\\str_append"],
+    "body": [
+      "\\str_put_right:Nn \\\\${1:string_var_name} {${2:token_list}}"
+    ],
+    "description": "Converts the ⟨token list⟩ to a ⟨string⟩, and appends the result to ⟨str var⟩. The current contents of the ⟨str var⟩ are not automatically converted to a string"
+  },
+  // ⋘────────── Modifying String Variables (section 17.6) ──────────⋙
+  "L3: String Replace": {
+    "prefix": ["\\str_replace_once"],
+    "body": [
+      "\\str_replace_once:Nnn \\\\${1:string_var} {${2:old}} {${3:new}}"
+    ],
+    "description": ""
+  },
+  "L3: String Replace All": {
+    "prefix": ["\\str_replace_all"],
+    "body": [
+      "\\str_replace_all:Nnn \\\\${1:string_var} {${2:old}} {${3:new}}"
+    ],
+    "description": ""
+  },
+  "L3: String Remove": {
+    "prefix": ["\\str_remove_once"],
+    "body": [
+      "\\str_remove_once:Nn \\\\${1:string_var} {${2:tokens list}}"
+    ],
+    "description": ""
+  },
+  "L3: String Remove All": {
+    "prefix": ["\\str_remove_all"],
+    "body": [
+      "\\str_remove_all:Nn \\\\${1:string_var} {${2:tokens list}}"
+    ],
+    "description": ""
+  },
+  // ⋘────────── Conditionals on strings──────────⋙
+  "L3: If string empty": {
+    "prefix": ["\\string_if_empty", "\\if_string_is_empty"],
+    "body": [
+      "\\\\str_if_empty:N${2|TF,T,F|} \\\\${1:str_name} ${2/^(T)?(F)?$/${1:+\n\t{\n\t\ttrue code\n\t\\}}${2:+\n\t{\n\t\tfalse code\n\t\\}}/}", 
+      "$0"
+    ],
+  },
+  "L3: If strings are equal": {
+    "prefix": ["\\str_if_equal", "\\if_strings_are_equal"],
+    "body": [
+      "\\\\str_if_in:Nn${3|TF,T,F|} \\\\${1:str1_name} \\\\${2:str1_name} ${3/^(T)?(F)?$/${1:+\n\t{\n\t\ttrue code\n\t\\}}${2:+\n\t{\n\t\tfalse code\n\t\\}}/}", 
+      "$0"
+    ],
+  },
+  "L3: If token list is in string": {
+    "prefix": ["\\str_if_in", "\\if_token_list_is_in_string", "\\if_is_substring"],
+    "body": [
+      "\\\\str_if_in:Nn${3|TF,T,F|} \\\\${1:str_name} {${2:token_list}} ${3/^(T)?(F)?$/${1:+\n\t{\n\t\ttrue code\n\t\\}}${2:+\n\t{\n\t\tfalse code\n\t\\}}/}", 
+      "$0"
+    ],
+  },
+  "L3: String Cases with Expansion": {
+    "prefix": ["\\str_cases_with_expansion", "\\str_switch_with_expansions_block"],
+    "body": [
+      "\\str_case_e:nn${3|TF,T,F|} {${1:test_string}}",
+      "\t{",
+      "\t\t{⟨expanded string case1⟩} {⟨code case1⟩}",
+      "\t\t{⟨expanded string case2⟩} {⟨code case2⟩}",
+      "\t\t...",
+      "\t\t{⟨expanded string case_n⟩} {⟨code case_n⟩}",
+      "\t}",
+      "${3/^(T)?(F)?$/${1:+\n\t{\n\t\tif case matched code\n\t\\}}${2:+\n\t{\n\t\tif no case matched code\n\t\\}}/}"
+    ],
+  },
+  // ⋘────────── Mapping over Strings ──────────⋙
+  // TODO
+  // ⋘────────── Inserting and Using Strings ──────────⋙
+  "L3: Use String": {
+    "prefix": ["\\str_use"],
+    "body": [
+      "\\\\${1:str_var_name}"
+    ],
+    "description": "A string can be used directly, without an accessor function."
+  },
+  "L3 String Length": {
+    "prefix": ["\\str_count", "\\string_length"],
+    "body": [
+      "\\\\${2|str_count,str_count_ignore_spaces,str_count_spaces|}:n {${1:token list}}"
+    ],
+  },
+  "L3 String Head": {
+    "prefix": ["\\str_head", "\\string_first"],
+    "body": [
+      "\\\\${2|str_head,str_head_ignore_spaces|}:n {${1:token list}}"
+    ],
+  },
+  "L3 String Item at Position": {
+    "prefix": ["\\str_item", "\\string_character_at_position"],
+    "body": [
+      "\\\\${3|str_item,str_item_ignore_spaces|}:nn {${1:token list}} {${2:item index (1-indexed)}}"
+    ],
+    "description": "1=leftmost character, -1=rightmost character."
+  },
+  "L3 String Range": {
+    "prefix": ["\\str_range", "\\string_characters_in_range", "\\str_substring"],
+    "body": [
+      "\\\\${4|str_range,str_range_ignore_spaces|}:nnn {${1:tokens}} {${2:start index}} {${3:end index (inclusive)}}"
+    ],
+    "description": "1=leftmost character, -1=rightmost character."
+  },
+  // ⋘────────── Capitalization ──────────⋙
+  "To Lowercase": {
+    "prefix": ["\\text_lowercase"],
+    "body": [
+      "\\text_lowercase:n {${1}}"
+    ],
+  },
+  "To Uppercase": {
+    "prefix": ["\\text_uppercase"],
+    "body": [
+      "\\text_uppercase:n {${1}}"
+    ],
+  },
+  "To Title Case": {
+    "prefix": ["\\text_titlecase_all"],
+    "body": [
+      "\\text_titlecase_${2|all,first|}:n {${1}}"
+    ],
+  },
+  // ╭──────────────────────────────────────────────────────────────╮
+  // │             LaTeX3 Comma-Separated Lists (clist)             │
+  // ╰──────────────────────────────────────────────────────────────╯
+  "L3: New Comma Separated List (clist)": {
+    "prefix": ["\\newCommaSeparatedList", "\\clistNew", "\\new_clist", "\\clist_new"],
+    "body": [
+      "\\\\clist_new${2|:N {\\\\,:c {|}l_${3:module}_${4:description}_clist}"
+    ],
+    "description": "Create a comma separated list in the LaTeX3 programming layer. Use clist_new_linked for large lists."
+  },
+  "L3: New Constant Comma Separated List (clist)": {
+    "prefix": ["\\newConstantCommaSeparatedList", "\\clistConstant", "\\const_clist", "\\clist_const"],
+    "body": [
+      "\\\\clist_const${2|:N {\\\\,:c {|}c_${3:module}_${4:description}_clist}"
+    ],
+    "description": "Create a constant comma separated list in the LaTeX3 programming layer. Use clist_new_linked for large lists."
+  },
+  "L3: Count clist": {
+    "prefix": ["\\countCommaSeparatedListItems", "\\clist_count"],
+    "body": [
+      "\\\\clist_count${1|:N {\\\\,:c {|}${2:clist_name}}$0"
+    ],
+    "description": "Leaves the number of key-value pairs in the ⟨clist⟩ in the input stream as an ⟨integer denotation⟩."
+  },
+  // ⋘────────── Put ──────────⋙
+  "L3: Set Comma Separated List": {
+    "prefix": ["\\clist_set", "\\setCommaSeparatedList"],
+    "body": [
+      "\\\\clist_set:Nn \\\\${1:clist_list_name}{${2:comma, separated, items}}", 
+      "$0"
+    ],
+    "description": "Sets ⟨clist var⟩ to contain the ⟨items⟩, removing any previous content from the variable.   items are omitted, spaces are removed from both sides of each item, then a set of braces is removed if the resulting space-trimmed item is braced. To store some ⟨tokens⟩ as a single ⟨item⟩ even if the ⟨tokens⟩ contain commas or spaces, add a set of braces: \\clist_set:Nn ⟨clist var⟩ { {⟨tokens⟩} }.."
+  },
+  "L3: Put left into Comma Separated List": {
+    "prefix": ["\\clist_put_left", "\\putLeftIntoCommaSeparatedList"],
+    "body": [
+      "\\\\clist_put_left:Nn \\\\${1:clist_list_name}{${2:comma, separated, items}}", 
+      "$0"
+    ],
+    "description": "Appends the ⟨items⟩ to the left of the ⟨clist var⟩. Blank items are omitted, spaces are removed from both sides of each item, then a set of braces is removed if the resulting space trimmed item is braced. To append some ⟨tokens⟩ as a single ⟨item⟩ even if the ⟨tokens⟩ contain commas or spaces, add a set of braces: \\clist_put_left:Nn ⟨clist var⟩ { {⟨tokens⟩} }."
+  },
+  "L3: Put right into Comma Separated List": {
+    "prefix": ["\\clist_put_right", "\\putRightIntoCommaSeparatedList"],
+    "body": [
+      "\\\\clist_put_right:Nn \\\\${1:clist_list_name}{${2:comma, separated, items}}", 
+      "$0"
+    ],
+    "description": "Appends the ⟨items⟩ to the right of the ⟨clist var⟩. Blank items are omitted, spaces are removed from both sides of each item, then a set of braces is removed if the resulting space trimmed item  braced. To append some ⟨tokens⟩ as a single ⟨item⟩ even if the ⟨tokens⟩ contain commas or spaces, add a set of braces: \\clist_put_right:Nn ⟨clist var⟩ { {⟨tokens⟩} }."
+  },
+  // ⋘────────── Modifying clists ──────────⋙
+  "L3: Remove Duplicates from clist": {
+    "prefix": ["\\clist_remove_duplicates"],
+    "body": [
+      "\\clist_remove_duplicates:N \\\\${1:clist_list_name}"
+    ],
+  },
+  "L3: Remove Given Items from clist": {
+    "prefix": ["\\clist_remove_all"],
+    "body": [
+      "\\clist_remove_all:Nn \\\\${1:clist_list_name}{${2:comma, separated, items, to, remove}}"
+    ],
+  },
+  "L3: Reverse clist": {
+    "prefix": ["\\clist_reverse"],
+    "body": [
+      "\\clist_reverse:N \\\\${1:clist_list_name}"
+    ],
+  },
+  "L3: Sort clist": {
+    "prefix": ["\\clist_sort"],
+    "body": [
+      "\\clist_sort:N \\\\${1:clist_list_name} {comparison code (see Section 6.1: https://ctan.math.washington.edu/tex-archive/macros/latex/required/l3kernel/interface3.pdf)}"
+    ],
+  },
+  // ⋘────────── Reading values from comma separated lists ──────────⋙
+  "L3: Get Clist Item": {
+    "prefix": ["\\clist_item", "\\clist_get_item"],
+    "body": [
+      "\\clist_item:Nn \\\\${1:clist_list_name} {${2:integer expression (1-indexed)}}"
+    ],
+    "description": "Indexing items in the ⟨clist var⟩ from 1 at the top (left), this function evaluates the ⟨int expr⟩ and leaves the appropriate item from the comma list in the input stream. If the ⟨int expr⟩ is negative, indexing occurs from the bottom (right) of the comma list. When the ⟨int expr⟩ is larger than the number of items in the ⟨clist var⟩ (as calculated by \\clist_count:N) then the function expands to nothing"
+  },
+  "L3: Get Random Clist Item": {
+    "prefix": ["\\clist_get_random_item"],
+    "body": [
+      "\\clist_rand_item:N \\\\${1:clist_list_name}"
+    ],
+  },
+  // ⋘────────── Using values from comma separated lists ──────────⋙
+  "L3: Join Clist": {
+    "prefix": ["\\clist_join", "\\clist_use"],
+    "body": [
+      "\\clist_use:Nn \\\\${1:clist_list_name} {${2:separator}}"
+    ],
+    "description": "Places the contents of the ⟨clist var⟩ in the input stream, with the ⟨separator⟩ between  he items. If the comma list has a single item, it is placed in the input stream, and a comma list with no items produces no output. An error is raised if the variable does not exist or if it is invalid. For example, \\clist_set:Nn \\l_tmpa_clist { a , b , , c , {de} , f } \\clist_use:Nn \\l_tmpa_clist { ~and~ } inserts “a and b and c and de and f” in the input stream. "
+  },
+  "L3: Join Clist Complex": {
+    "prefix": ["\\clist_join_complex", "\\clist_use_complex"],
+    "body": [
+      "\\clist_use:Nnnn \\\\${1:clist_list_name} {${2:separator between two}} {${3:separator between more than two}} {${4:separator between final two}}"
+    ],
+    "description": "Places the contents of the ⟨clist var⟩ in the input stream, with the appropriate ⟨separator⟩ between the items. Namely, if the comma list has more than two items, the ⟨separator between more than two⟩ is placed between each pair of items except the last, for which the ⟨separator between final two⟩ is used. If the comma list has exactly two items, then they are placed in the input stream separated by the ⟨separator between two⟩. If the comma list has a single item, it is placed in the input stream, and a comma list with no items produces no output. An error is raised if the variable does not exist or if it is invalid."
+  },
+  // ⋘────────── Removing values from comma separated lists ──────────⋙
+  "L3: Remove from Comma Separated List": {
+    "prefix": ["\\clist_remove", "\\removeFromCommaSeparatedList"],
+    "body": [
+      "\\\\clist_pop:Nn \\\\${1:clist_list_name}{${2:key}}", 
+      "$0"
+    ],
+    "description": "Removes the entry listed under ⟨key⟩ from the ⟨comma separated list⟩. If the ⟨key⟩ is not found in the ⟨comma separated list⟩ no change occurs, i.e there is no need to test for the existence of a key before deleting it. "
+  },
+  "L3: Clear Comma Separated List": {
+    "prefix": ["\\clearCommaSeparatedList", "\\clistClear", "\\clear_comma_separated_list", "\\clist_clear"],
+    "body": [
+      "% Clear the contents of \\\\${1:clist_name} if it exists.",
+      "\\\\clist_clear${1|:N {\\\\,:c {|}${1:clist_name}}$0"
+    ],
+    "description": "Clear a comma separated list in the LaTeX3 programming layer. If the list does not exist, then it is created."
+  },
+  "L3: Make or Clear Comma Separated List": {
+    "prefix": ["\\clearNewCommaSeparatedList", "\\clist_clear_new"],
+    "body": [
+      "% Ensure that \\\\${1:clist_name} exist and is empty.",
+      "\\\\clist_clear_new${1|:N {\\\\,:c {|}${1:clist_name}}$0"
+    ],
+    "description": "Clear a comma separated list in the LaTeX3 programming layer. If the list does not exist, then it is created."
+  },
+  // ⋘────────── Mapping over Comma Separated Lists ──────────⋙
+  "L3: Map clist": {
+    "prefix": ["\\clist_map_function", "\\mapClistByFunction"],
+    "body": [
+      "\\\\clist_map_function:NN \\\\${1:clist_list_name} \\\\${2:function}", 
+      "$0"
+    ],
+    "description": "Applies ⟨function⟩ to every ⟨entry⟩ stored in the clist⟩. The ⟨function⟩ receives one argument for each iteration: the ⟨key⟩ and associated ⟨value⟩. The ⟨items⟩ are returned from left to right. The function \\clist_map_inline:Nn is in general more efficient than \\clist_map_function:NN.."
+  },
+  "L3: Map Inline clist": {
+    "prefix": ["\\clist_map_inline"],
+    "body": [
+      "\\\\clist_map_inline:Nn \\\\${1:clist_list_name} {${2:function using #1=item}}", 
+      "$0"
+    ],
+    "description": "Applies ⟨inline function⟩ to every ⟨item⟩ stored within the ⟨clist var⟩. The ⟨inline function⟩ should consist of code which receives the ⟨item⟩ as #1. The ⟨items⟩ are returned from left to right."
+  },
+  "L3: Map clist with variable": {
+    "prefix": ["\\clist_map_variable", "\\clist_collect"],
+    "body": [
+      "\\\\clist_map_variable:NNn \\\\${1:clist_list_name} \\\\${2:item_variable} {${3:code using  \\\\${2:item_variable}}}", 
+      "$0"
+    ],
+    "description": "Stores each ⟨item⟩ of the ⟨clist var⟩ in turn in the (token list) ⟨variable⟩ and applies the ⟨code⟩. The ⟨code⟩ will usually make use of the ⟨variable⟩, but this is not enforced. The assignments to the ⟨variable⟩ are local. Its value after the loop is the last ⟨item⟩ in the ⟨clist var⟩, or its original value if there were no ⟨item⟩. The ⟨items⟩ are returned from left to right."
+  },
+  // ⋘────────── Conditionals on clists ──────────⋙
+  "L3: If clist empty": {
+    "prefix": ["\\clist_if_empty", "\\if_clist_is_empty"],
+    "body": [
+      "\\\\clist_if_empty:N${2|TF,T,F|} \\\\${1:clist_name} ${2/^(T)?(F)?$/${1:+\n\t{\n\t\ttrue code\n\t\\}}${2:+\n\t{\n\t\tfalse code\n\t\\}}/}", 
+      "$0"
+    ],
+  },
+  "L3: If clist empty (predicate version)": {
+    "prefix": ["\\clist_if_empty_predicate", "\\if_clist_is_empty_predicate"],
+    "body": [
+      "\\\\clist_if_empty_p:N \\\\${1:clist_name}", 
+      "$0"
+    ],
+    "description": "Inserts true or false based on whether the clist is empty."
+  },
+  "L3: If item is in clist": {
+    "prefix": ["\\clist_is_in", "\\clist_if_contains", "\\if_item_is_in_clist", "\\if_clist_contains_item"],
+    "body": [
+      "\\\\clist_if_in:Nn${3|TF,T,F|} \\\\${1:clist_name} {${2:item}} ${3/^(T)?(F)?$/${1:+\n\t{\n\t\ttrue code\n\t\\}}${2:+\n\t{\n\t\tfalse code\n\t\\}}/}", 
+      "$0"
+    ],
+  },
+  // ╭──────────────────────────────────────────────────────────────╮
+  // │             LaTeX3 Property Lists (Dictionaries)             │
+  // ╰──────────────────────────────────────────────────────────────╯
+  "L3: New Property List": {
+    "prefix": ["\\newPropertyList", "\\propNew", "\\new_property_list", "\\prop_new", "\\createPropertyList", "\\newDictionary", "\\dictNew", "\\new_dictionary", "\\dict_new", "\\createDictionary"],
+    "body": [
+      "\\\\${1|prop_new,prop_new_linked|}${2|:N {\\\\,:c {|}l_${3:module}_${4:description}_prop}"
+    ],
+    "description": "Create a property list in the LaTeX3 programming layer. Use prop_new_linked for large lists."
+  },
+  "L3: Count Property List": {
+    "prefix": ["\\countPropertyListItems", "\\prop_count"],
+    "body": [
+      "\\\\prop_count${1|:N {\\\\,:c {|}${2:prop_name}}$0"
+    ],
+    "description": "Leaves the number of key-value pairs in the ⟨property list⟩ in the input stream as an ⟨integer denotation⟩."
+  },
+  // ⋘────────── Put ──────────⋙
+  "L3: Put into Property List": {
+    "prefix": ["\\prop_put", "\\putPropertyList"],
+    "body": [
+      "\\\\prop_put:Nnn \\\\${1:prop_list_name}{${2:key}}{${3:value}}", 
+      "$0"
+    ],
+    "description": "Adds an entry to the ⟨property list⟩ which may be accessed using the ⟨key⟩ and which has ⟨value⟩. If the ⟨key⟩ is already present in the ⟨property list⟩, the existing entry is overwritten by the new ⟨value⟩."
+  },
+  "L3: Put if not in into Property List": {
+    "prefix": ["\\prop_put_if_not_in", "\\putIfNotInPropertyList"],
+    "body": [
+      "\\\\prop_put_if_not_in:Nnn \\\\${1:prop_list_name}{${2:key}}{${3:value}}", 
+      "$0"
+    ],
+    "description": "If the ⟨key⟩ is present in the ⟨property list⟩ then no action is taken. Otherwise, adds an entry to the ⟨property list⟩ which may be accessed using the ⟨key⟩ and which has ⟨value⟩. If the ⟨key⟩ is already present in the ⟨property list⟩, the existing entry is overwritten by the new ⟨value⟩."
+  },
+  // ⋘────────── Reading values from property lists ──────────⋙
+  "L3: Get from Property List": {
+    "prefix": ["\\prop_get", "\\getPropertyList"],
+    "body": [
+      "\\\\prop_get:NnN \\\\${1:prop_list_name} {${2:key}} {\\\\${3:token_list_var}}  ${4:{true code\\} {false code\\}}", 
+      "$0"
+    ],
+    "description": "Recovers the ⟨value⟩ stored with ⟨key⟩ from the ⟨property list⟩, and places this in the ⟨tl var⟩. If the ⟨key⟩ is not found in the ⟨property list⟩ then the ⟨tl var⟩ is set to the special marker \\q_no_value."
+  },
+  "L3: Pop from Property List": {
+    "prefix": ["\\prop_pop", "\\popPropertyList"],
+    "body": [
+      "\\\\prop_pop:NnN \\\\${1:prop_list_name} {${2:key}} {\\\\${3:token_list_var}} ${4:{true code\\} {false code\\}}", 
+      "$0"
+    ],
+    "description": "Recovers the ⟨value⟩ stored with ⟨key⟩ from the ⟨property list⟩, and places this in the ⟨tl var⟩. If the ⟨key⟩ is not found in the ⟨property list⟩ then the ⟨tl var⟩ is set to the special marker \\q_no_value. The ⟨key⟩ and ⟨value⟩ are then deleted from the property list. "
+  },
+  "L3: Item from Property List": {
+    "prefix": ["\\prop_item", "\\itemPropertyList", "\\prop_get_expanded_item"],
+    "body": [
+      "\\\\prop_item:Nn \\\\${1:prop_list_name} {${2:key}}", 
+      "$0"
+    ],
+    "description": "Expands to the ⟨value⟩ corresponding to the ⟨key⟩ in the ⟨property list⟩. If the ⟨key⟩ is missing, this has an empty expansion."
+  },
+  // ⋘────────── Setting values in from Key-value pairs in property lists ──────────⋙
+  "L3: Set Property List from Key-Value pairs": {
+    "prefix": ["\\setPropertyListFromKeyValuePairs", "\\prop_set"],
+    "body": [
+      "\\\\prop_set_from_keyval${1|:Nn {\\\\,:Nn {|}${1:prop_name}}{", 
+      "\t${2:key1} = ${3:value2},",
+      "\t${3:key1} = ${4:value2},",
+      "}",
+      "$0"
+    ],
+    "description": "Sets a property list to contain key-value pairs given in the second argument. If duplicate keys appear only the last of the values is kept."
+  },
+  "L3: Put from Key-Value pairs into Property List ": {
+    "prefix": ["\\setPropertyListFromKeyValuePairs", "\\prop_set"],
+    "body": [
+      "\\\\prop_put_from_keyval${1|:Nn {\\\\,:Nn {|}${1:prop_name}}{", 
+      "\t${2:key1} = ${3:value2},",
+      "\t${3:key1} = ${4:value2},",
+      "}",
+      "$0"
+    ],
+    "description": "Updates the ⟨property list⟩ by adding entries for each key–value pair given in the second argument. If duplicate keys appear only the last of the values is kept."
+  },
+  // ⋘────────── Removing values from property lists ──────────⋙
+  "L3: Remove from Property List": {
+    "prefix": ["\\prop_remove", "\\removeFromPropertyList"],
+    "body": [
+      "\\\\prop_pop:Nn \\\\${1:prop_list_name}{${2:key}}", 
+      "$0"
+    ],
+    "description": "Removes the entry listed under ⟨key⟩ from the ⟨property list⟩. If the ⟨key⟩ is not found in the ⟨property list⟩ no change occurs, i.e there is no need to test for the existence of a key before deleting it. "
+  },
+  "L3: Clear Property List": {
+    "prefix": ["\\clearPropertyList", "\\propClear", "\\clear_property_list", "\\prop_clear"],
+    "body": [
+      "% Ensure that \\\\${2:prop_name} exists and is empty.",
+      "\\\\prop_clear${1|:N {\\\\,:c {|}${2:prop_name}}$0"
+    ],
+    "description": "Clear a property list in the LaTeX3 programming layer. If the list does not exist, then it is created."
+  },
+  // ⋘────────── Mapping over Property Lists ──────────⋙
+  "L3: Map Property List": {
+    "prefix": ["\\prop_map_function", "\\mapPropertyListByFunction"],
+    "body": [
+      "\\\\prop_map_function:NN \\\\${1:prop_list_name} \\\\${2:function}", 
+      "$0"
+    ],
+    "description": "Applies ⟨function⟩ to every ⟨entry⟩ stored in the ⟨property list⟩. The ⟨function⟩ receives two arguments for each iteration: the ⟨key⟩ and associated ⟨value⟩. The order in which ⟨entries⟩ are returned is not defined and should not be relied upon. To pass further arguments to the ⟨function⟩, see \\prop_map_inline:Nn (non-expandable) or \\prop_map_tokens:Nn."
+  },
+  "L3: Map Inline Property List": {
+    "prefix": ["\\prop_map_inline"],
+    "body": [
+      "\\\\prop_map_inline:Nn \\\\${1:prop_list_name} {${2:function using #1=key, #2=value}}", 
+      "$0"
+    ],
+    "description": "Applies ⟨inline function⟩ to every ⟨entry⟩ stored within the ⟨property list⟩. The ⟨inline function⟩ should consist of code which receives the ⟨key⟩ as #1 and the ⟨value⟩ as #2. The order in which ⟨entries⟩ are returned is not defined and should not be relied upon"
+  },
+  // ⋘────────── Conditionals on Property Lists ──────────⋙
+  "L3: If prop empty": {
+    "prefix": ["\\prop_if_empty", "\\if_prop_is_empty"],
+    "body": [
+      "\\\\prop_if_empty:N${2|TF,T,F|} \\\\${1:prop_name} ${2/^(T)?(F)?$/${1:+\n\t{\n\t\ttrue code\n\t\\}}${2:+\n\t{\n\t\tfalse code\n\t\\}}/}", 
+      "$0"
+    ],
+  },
+  "L3: If prop empty (predicate version)": {
+    "prefix": ["\\prop_if_empty_predicate", "\\if_prop_is_empty_predicate"],
+    "body": [
+      "\\\\prop_if_empty_p:N \\\\${1:prop_name}", 
+      "$0"
+    ],
+    "description": "Inserts true or false based on whether the prop is empty."
+  },
+  "L3: If item is in prop": {
+    "prefix": ["\\prop_is_in", "\\prop_contains", "\\if_item_is_in_prop"],
+    "body": [
+      "\\\\prop_if_in:Nn${3|TF,T,F|} \\\\${1:prop_name} {${2:item}} ${3/^(T)?(F)?$/${1:+\n\t{\n\t\ttrue code\n\t\\}}${2:+\n\t{\n\t\tfalse code\n\t\\}}/}", 
+      "$0"
+    ],
+  },
+  // ╭──────────────────────────────────────────────────────╮
+  // │             LaTeX3 Integers (Chapter 21)             │
+  // ╰──────────────────────────────────────────────────────╯
+  "L3 Integer Set Equal to Another Integer": {
+    "prefix": ["\\int_set_eq", "\\set_integer_equal_to_another_integer", "\\int_copy_value"],
+    "body": [
+      "\\int_set_eq:NN \\\\${1:integer_to_set} \\\\${2:integer_to_copy}"
+    ],
+  },
+  // ⋘────────── Conditionals ──────────⋙
+  "L3 Integer Comparison Conditional (Simple and Fast)": {
+    "prefix": ["\\int_compare_simple", "\\integer_conditional", "\\if_integer_relation"],
+    "body": [
+      "\\int_compare:nNn${4|TF,T,F|} {${1:left integer expression}} ${2|<,=,>|} {${3:right int expression}} ${4/^(T)?(F)?$/${1:+\n\t{\n\t\ttrue code\n\t\\}}${2:+\n\t{\n\t\tfalse code\n\t\\}}/}", 
+    ],
+  },
+  "L3 Integer Comparison Conditional": {
+    "prefix": ["\\int_compare_complex", "\\integer_conditional", "\\if_integer_relation"],
+    "body": [
+      "\\int_compare:nTF${3|TF,T,F|} {", 
+      "\t {${1:left integer expression 1}} ${2|<,=,>|} {${3:right int expression 2}} ",
+      "\t $0 ",
+      "} ${3/^(T)?(F)?$/${1:+\n\t{\n\t\ttrue code\n\t\\}}${2:+\n\t{\n\t\tfalse code\n\t\\}}/}", 
+    ],
+  },
+  // ╭────────────────────────────────────────────────────────────────────────────╮
+  // │             LaTeX3 Messages, Errors, and Warnings (Chapter 11)             │
+  // ╰────────────────────────────────────────────────────────────────────────────╯
+  // "L3 New Message": {
+  //   "prefix": ["\\msg_new", "\\new_message"],
+  //   "body": [
+  //     "\\char_set_catcode_space:n { `\\\\ }% Change category code of spaces to 12 so they can be typed directly, instead of \"~\"",
+  //     "\\msg_new:nnn { ${1:module} } { ${2:message_id} }",
+  //     "\\char_set_catcode_ignore:n { `\\\\ }% Reset category code of spaces."
+  //   ],
+  //   "description": "Creates a ⟨message⟩ for a given ⟨module⟩. The message is defined to first give ⟨text⟩ and then ⟨more text⟩ if the user requests it. If no ⟨more text⟩ is available then a standard text is given instead. Within ⟨text⟩ and ⟨more text⟩ four parameters (#1 to #4) can be used: these will be supplied at the time the message is used. An error is raised if the ⟨message⟩ already exists."
+  // },
+  "L3 New Message with Arguments": {
+    "prefix": ["\\msg_new_with_args", "\\new_message_with_arguments",  "\\new_message_with_parameters"],
+    "body": [
+      "\\char_set_catcode_space:n { `\\\\ }% Change category code of spaces to 12 so they can be typed directly, instead of \"~\"",
+      "\\msg_new:nnn { ${1:module} } { ${2:message_id} } { ${3:text using up to four parameters (#1 to #4)} }",
+      "\\char_set_catcode_ignore:n { `\\\\ }% Reset category code of spaces."
+    ],
+    "description": "Creates a ⟨message⟩ for a given ⟨module⟩. The message is defined to first give ⟨text⟩ and then ⟨more text⟩ if the user requests it. If no ⟨more text⟩ is available then a standard text is given instead. Within ⟨text⟩ and ⟨more text⟩ four parameters (#1 to #4) can be used: these will be supplied at the time the message is used. An error is raised if the ⟨message⟩ already exists."
+  },
+  "L3 Set Message": {
+    "prefix": ["\\msg_set", "\\set_message"],
+    "body": [
+      "\\char_set_catcode_space:n { '\\ }% Change category code of spaces so they can be typed directly, instead of \"~\"",
+      "\\msg_set:nnn {${1:module}} {${2:message_id}} {${3:text using up to four parameters (#1 to #4)}}",
+      "\\char_set_catcode_ignore:n { '\\ }% Reset category code of spaces."
+    ],
+    "description": "Creates (if needed) and sets a ⟨message⟩ for a given ⟨module⟩. The message is defined to first give ⟨text⟩ and then ⟨more text⟩ if the user requests it. If no ⟨more text⟩ is available then a standard text is given instead. Within ⟨text⟩ and ⟨more text⟩ four parameters (#1 to #4) can be used: these will be supplied at the time the message is used."
+  },
+  // ⋘────────── Create and issue messages of various severity ──────────⋙
+  "L3 Issue Message": {
+    "prefix": ["\\msg", "\\new_message", "\\show_message"],
+    "body": [
+      "% TODO: Move this the message definition to the top of the package or class file in a central message-definition section.",
+      "\\char_set_catcode_space:n { `\\\\ }% Change category code of spaces to 12 so spaces can be typed directly, instead of \"~\"",
+      // We automatically load the file name as the module name using the regex replacement ${TM_FILENAME/^(.*)(\\.\\w+)/$1/}.
+      "\t\\msg_new:nnn {${TM_FILENAME/^(.*)(\\.\\w+)/$1/}} {${2:message_id}} {${0:Message text using up to ${3|0,1,2,3,4|} parameters (#1 to #$3)}}",
+      "\\char_set_catcode_ignore:n { `\\\\ }% Reset category code of spaces.",
+      // We put "(0)?" as the last group, group 5, so that the group numbers of the other groups would match the number of parameters selected.
+      "\\msg_${4|fatal,warning,info,note|}:nn${3/^(1)?(2)?(3)?(4)?(0)?$/${1:+n}${2:+nn}${3:+nnn}${4:+nnnn}/g} { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} } { ${2:message_id} } ${3/^(1)?(2)?(3)?(4)?(0)?$/${1:+ { arg1 \\} }${2:+ { arg1 \\} { arg2 \\} }${3:+ { arg1 \\} { arg2 \\} { arg3 \\} }${4:+ { arg1 \\} { arg2 \\} { arg3 \\} { arg4 \\} }${5:+ }/g} "
+    ],
+    "description": [
+      "  fatal: Stop compilation and show error in terminal and log.\n",
+      "warning: Show warning in log and terminal.\n",
+      "   info: Show message in log and terminal.\n",
+      "   note: Show message in terminal.",
+    ]
+  },
+  // "L3 New Fatal Message": {
+  //   "prefix": ["\\msg_fatal", "\\fatal_message"],
+  //   "body": [
+  //     "% TODO: Move this the message definition to the top of the package or class file in a central message-definition section.",
+  //     "\\char_set_catcode_space:n { `\\\\ }% Change category code of spaces to 12 so spaces can be typed directly, instead of \"~\"",
+  //     "\\msg_new:nnn { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} } { ${2:message_id} } { ${0:Message text using up to ${3|0,1,2,3,4|} parameters (#1 to #$3)} }",
+  //     "\\char_set_catcode_ignore:n { `\\\\ }% Reset category code of spaces.",
+  //     // We put "(0)?" as the last group, group 5, so that the group numbers of the other groups would match the number of parameters selected.
+  //     "\\msg_fatal { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} } { ${2:message_id} } ${3/^(1)?(2)?(3)?(4)?(0)?$/${1:+ { arg1 \\} }${2:+ { arg1 \\} { arg2 \\} }${3:+ { arg1 \\} { arg3 \\} { arg4 \\} }${4:+ { arg1 \\} { arg2 \\} { arg3 \\} { arg4 \\} }${5:+ }/g} "
+  //   ],
+  // },
+  // // ! We omit the "critical" message snippet because we don't see it as being particularly useful. It allows compilation to continue but aborts the current file. 
+  // // "L3 Insert Critical Message": {
+  // //   "prefix": ["\\msg_critical", "\\critical_message"],
+  // //   "body": [
+  // //     "\\msg_critical { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} }"
+  // //   ],
+  // // },
+  // "L3 New Error Message": {
+  //   "prefix": ["\\msg_error", "\\error_message"],
+  //   "body": [
+  //     "% Create a new message.", 
+  //     "% TODO: Move this the message definition to the top of the package or class file in a central message-definition section.",
+  //     "\\char_set_catcode_space:n { `\\\\ }% Change category code of spaces to 12 so spaces can be typed directly, instead of \"~\"",
+  //     "\\msg_new:nnn { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} } { ${2:message_id} } { ${0:Message text using up to ${3|0,1,2,3,4|} parameters (#1 to #$3)} }",
+  //     "\\char_set_catcode_ignore:n { `\\\\ }% Reset category code of spaces.",
+  //     // We put "(0)?" as the last group, group 5, so that the group numbers of the other groups would match the number of parameters selected.
+  //     "\\msg_error { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} } { ${2:message_id} } ${3/^(1)?(2)?(3)?(4)?(0)?$/${1:+ { arg1 \\} }${2:+ { arg1 \\} { arg2 \\} }${3:+ { arg1 \\} { arg3 \\} { arg4 \\} }${4:+ { arg1 \\} { arg2 \\} { arg3 \\} { arg4 \\} }${5:+ }/g} "
+  //   ],
+  // },
+  // "L3 New Warning Message": {
+  //   "prefix": ["\\msg_warning", "\\warning_message"],
+  //   "body": [
+  //     "% Create a new message.", 
+  //     "% TODO: Move this the message definition to the top of the package or class file in a central message-definition section.",
+  //     "\\char_set_catcode_space:n { `\\\\ }% Change category code of spaces to 12 so spaces can be typed directly, instead of \"~\"",
+  //     "\\msg_new:nnn { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} } { ${2:message_id} } { ${0:Message text using up to ${3|0,1,2,3,4|} parameters (#1 to #$3)} }",
+  //     "\\char_set_catcode_ignore:n { `\\\\ }% Reset category code of spaces.",
+  //     // We put "(0)?" as the last group, group 5, so that the group numbers of the other groups would match the number of parameters selected.
+  //     "\\msg_warning { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} } { ${2:message_id} } ${3/^(1)?(2)?(3)?(4)?(0)?$/${1:+ { arg1 \\} }${2:+ { arg1 \\} { arg2 \\} }${3:+ { arg1 \\} { arg3 \\} { arg4 \\} }${4:+ { arg1 \\} { arg2 \\} { arg3 \\} { arg4 \\} }${5:+ }/g} "
+  //   ],
+  // },
+  // "L3 New Info Message": {
+  //   "prefix": ["\\msg_info", "\\info_message"],
+  //   "body": [
+  //     "% Create a new message.", 
+  //     "% TODO: Move this the message definition to the top of the package or class file in a central message-definition section.",
+  //     "\\char_set_catcode_space:n { `\\\\ }% Change category code of spaces to 12 so spaces can be typed directly, instead of \"~\"",
+  //     "\\msg_new:nnn { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} } { ${2:message_id} } { ${0:Message text using up to ${3|0,1,2,3,4|} parameters (#1 to #$3)} }",
+  //     "\\char_set_catcode_ignore:n { `\\\\ }% Reset category code of spaces.",
+  //     // We put "(0)?" as the last group, group 5, so that the group numbers of the other groups would match the number of parameters selected.
+  //     "\\msg_info { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} } { ${2:message_id} } ${3/^(1)?(2)?(3)?(4)?(0)?$/${1:+ { arg1 \\} }${2:+ { arg1 \\} { arg2 \\} }${3:+ { arg1 \\} { arg3 \\} { arg4 \\} }${4:+ { arg1 \\} { arg2 \\} { arg3 \\} { arg4 \\} }${5:+ }/g} "
+  //   ],
+  // },
+  // "L3 New Note Message": {
+  //   "prefix": ["\\msg_note", "\\note_message"],
+  //   "body": [
+  //     "% Create a new message.", 
+  //     "% TODO: Move this the message definition to the top of the package or class file in a central message-definition section.",
+  //     "\\char_set_catcode_space:n { `\\\\ }% Change category code of spaces to 12 so spaces can be typed directly, instead of \"~\"",
+  //     "\\msg_new:nnn { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} } { ${2:message_id} } { ${0:Message text using up to ${3|0,1,2,3,4|} parameters (#1 to #$3)} }",
+  //     "\\char_set_catcode_ignore:n { `\\\\ }% Reset category code of spaces.",
+  //     // We put "(0)?" as the last group, group 5, so that the group numbers of the other groups would match the number of parameters selected.
+  //     "\\msg_note { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} } { ${2:message_id} } ${3/^(1)?(2)?(3)?(4)?(0)?$/${1:+ { arg1 \\} }${2:+ { arg1 \\} { arg2 \\} }${3:+ { arg1 \\} { arg3 \\} { arg4 \\} }${4:+ { arg1 \\} { arg2 \\} { arg3 \\} { arg4 \\} }${5:+ }/g} "
+  //   ],
+  // },
+  // ⋘────────── Issuing Messages (Warnings, Errors, Info) ──────────⋙
+  "L3 Issue Fatal Message": {
+    "prefix": ["\\msg_fatal", "\\issue_fatal_message", "\\msg_critical", "\\issue_critical_message", "\\msg_error", "\\issue_error_message"],
+    "body": [
+      "\\msg_fatal:nnnnnn { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} } {${2:message_id}} {${3:arg 1}} {${4:arg 2}} {${5:arg 3}} {${6:arg 4}}"
+    ],
+    "description": "Issue a fatal message, ending the TEX run. Use this instead of critical or error messages, which do not terminate the compilation."
+  },
+  // "L3 Issue Critical Message": {
+  //   "prefix": ["\\msg_critical", "\\issue_critical_message"],
+  //   "body": [
+  //     "\\msg_critical:nnnnnn { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} } {${2:message_id}} {${3:arg 1}} {${4:arg 2}} {${5:arg 3}} {${6:arg 4}}"
+  //   ],
+  //   "description": "Issue a critical message, ending the file being input;"
+  // },
+  "L3 Issue Error Message": {
+    "prefix": ["\\msg_error", "\\issue_error_message"],
+    "body": [
+      "\\msg_error:nnnnnn { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} } {${2:message_id}} {${3:arg 1}} {${4:arg 2}} {${5:arg 3}} {${6:arg 4}}"
+    ],
+    "description": "Issue a error message, interrupting the TEX run without ending it;"
+  },
+  "L3 Issue Warning Message": {
+    "prefix": ["\\msg_warning", "\\issue_warning_message"],
+    "body": [
+      "\\msg_warning:nnnnnn { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} } {${2:message_id}} {${3:arg 1}} {${4:arg 2}} {${5:arg 3}} {${6:arg 4}}"
+    ],
+    "description": "Issue a warning message, written to terminal and log file, for important messages that may require corrections by the user;"
+  },
+  "L3 Issue Note Message": {
+    "prefix": ["\\msg_note", "\\issue_note_message"],
+    "body": [
+      "\\msg_note:nnnnnn { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} } {${2:message_id}} {${3:arg 1}} {${4:arg 2}} {${5:arg 3}} {${6:arg 4}}"
+    ],
+    "description": "Issue a note message (less common than info) for important information messages written to the terminal and log file;"
+  },
+  "L3 Issue Info Message": {
+    "prefix": ["\\msg_info", "\\issue_info_message"],
+    "body": [
+      "\\msg_info:nnnnnn { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} } {${2:message_id}} {${3:arg 1}} {${4:arg 2}} {${5:arg 3}} {${6:arg 4}}"
+    ],
+    "description": "Issue a info message for normal information messages written to the log file only;"
+  },
+  "L3 Issue Term Message": {
+    "prefix": ["\\msg_term", "\\issue_term_message"],
+    "body": [
+      "\\msg_term:nnnnnn { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} } {${2:message_id}} {${3:arg 1}} {${4:arg 2}} {${5:arg 3}} {${6:arg 4}}"
+    ],
+    "description": "Issue a term message and log for un-decorated messages written to the terminal and log file, or to the log file only;"
+  },
+  "L3 Issue None Message": {
+    "prefix": ["\\msg_none", "\\issue_none_message"],
+    "body": [
+      "\\msg_none:nnnnnn { ${TM_FILENAME/^(.*)(\\.\\w+)/$1/} } {${2:message_id}} {${3:arg 1}} {${4:arg 2}} {${5:arg 3}} {${6:arg 4}}"
+    ],
+    "description": "Issue a none message for suppressed messages."
+  },
+  // ╭──────────────────────────────────────────────────────────────╮
+  // │             File and I/O Operations (Chapter 12)             │
+  // ╰──────────────────────────────────────────────────────────────╯
+  "L3: Read entire file contents": {
+    "prefix": ["\\file_get", "\\file_read_all", "\\read_file"],
+    "body": [
+      "\\file_get:nnN {${1:file_name}} {} \\\\${2:tl_name}"
+    ],
+    "description": ""
+  },
+  "L3: Input File": {
+    "prefix": ["\\file_input"],
+    "body": [
+      "\\file_input:n {${1:file_name}}"
+    ],
+    "description": "Searches for ⟨file name⟩ in the path as detailed for \\file_if_exist:nTF, and if found reads in the file as additional LATEX source. All files read are recorded for information and the file name stack is updated by this function. An error is raised if the file is not found."
+  },
+  "L3: Input File Raw": {
+    "prefix": ["\\file_input_raw"],
+    "body": [
+      "\\file_input_raw:n {${1:file_name}}"
+    ],
+    "description": "Searches for ⟨file name⟩ in the path as detailed for \file_if_exist:nTF, and if found reads in the file as additional TEX source. No data concerning the file is tracked. If the file is not found, no action is taken. This function is intended only for contexts where files must be read purely by expansion, for example at the start of a table cell in an \\halign."
+  },
+}

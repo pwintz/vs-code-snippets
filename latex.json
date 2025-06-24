@@ -1,987 +1,1463 @@
-	{
-		// Place your snippets for latex here. Each snippet is defined under a snippet name and has a prefix, body and 
-		// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
-		// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the same ids are connected.
-		//////////////////////////////////////////
-		// Equations
-		"Display Equation":{
-			"prefix": ["\\["],
-			"body": [
-				// If the current line is not empty, then insert an empty line.
-				"${TM_CURRENT_LINE/(?:^(\\s*)\\S.*$|(^\\s*$))/${1:+\n}$1/}\\[",
-					"\t$TM_SELECTED_TEXT$1",
-				"\\] $0"
-			],
-			"description": "Insert block equation with line-breaks and indentation."
-		},
-		"Inline Equation":{
-			"body": [
-				"$$TM_SELECTED_TEXT$1$$0"
-			],
-			"description": "Insert inline equation."
-		},
-		"Equation Environment":{
-			"prefix": ["\\equation"],
-			"body": [
-				"\\begin{equation}",
-					"\t\\label{eq:$RANDOM_HEX}",
-					// Regex (unescaped): \s*(?:\\\[\s*((?:.(?:\s*)??)*)\s*\\\]|((?:.|\s)+))\s*
-					//   Match either "  \[ \n .... \] " or just the entire contents and insert it as the body of the equation.
-					//   Explanation:
-					//      (?:\s*)??: Match any number of spaces *including line breaks* but 
-					//								 only if needed to allow for subsequent non-space characters.
-					"\t${TM_SELECTED_TEXT/\\s*(?:\\s*\\\\\\[\\s*((?:.(?:\\s*\\S)?)*)\\s*\\\\\\]\\s*|((?:.|\\s)+))\\s*/$1$2/}$1$0",
-				"\\end{equation}",
-				""
-			],
-			"description": "Insert equation environment with a random hexidecimal label."
-		},
-		"Generate Equation Label":{
-			"prefix": ["\\eqlabel"],
-			"body": [
-				// Automatically generate a label from the contents of the equation, deleting any backslashes or ambersands.
-				"\\label{eq:${TM_SELECTED_TEXT/[\\\\&,]//g}${1/[\\\\&,]//g}$1}",
-				"$TM_SELECTED_TEXT$0"
-			],
-			"description": "Create an equation label that is automatically generated from the selected text."
-		},
-		"Display Equation to Equation Environment":{
-			"prefix": ["\\eqtoeq"],
-			"body": [
-				// Group 1: Before text. "(.*?)"
-				// Group 2: Tab spaces before equation delimiter. "(\\h*)"
-				// Group 3: Equation contents "(.*?)"
-				// Group 4: After text "(.*)"
-				"${TM_SELECTED_TEXT/(.*?)(\\h*)\\\\\\[\\s*(.*?)\\s*\\\\\\](.*)/$1$2\\begin{equation}\n$2\t$3\n$2\\end{equation}\n/s}"
-			],
-			"description": "Convert a display equation to an equation environment."
-		},
-		"Convert inline to display equation":{
-			"body": [
-				// Unescaped RegEx: ([\S\s]*)\$\s*(.*?)\s*\$([,.]{0,1})([\S\s]*)
-				// Group 1: Content before equation. ("[\S\s]" matches any character)
-				// Group 2: Contents of equation, stripping white space.
-				// Group 3: Punctuation after equation ("[,.]{0,1}" matches "," or "." zero or one times)
-				// Group 4: Content after equation
-				"${TM_SELECTED_TEXT/([\\S\\s]*)\\$\\s*(.*?)\\s*\\$([,.]{0,1})([\\S\\s]*)/$1\\[\n\t$2$3\n\\]$4/s}",
-			],
-			"description": "Convert an inline equation to a display equation."
-		},
-		"Convert display to inline equation":{
-			"body": [
-				// Regular expression (unescaped): (.*)\\\[\s*\n*\s*(.*?)\s*\n*\s*\\\](.*)
-				// - "\s*" matches any number of spaces and line breaks around it.
-				// - "[\s\S]" matches any character, including line breaks and spaces.
-				// - "\\\[" Matches "\[" (there are three backslashes because "\\" matches "\" and "\[" matches "[").
-				// Group 1: All the content before the equation.
-				// Group 2: All the content in the equation, except for final punctuation  
-				// Group 3: Final punctuation ("[,.]{0,1}").
-				// Group 4: All the content after the equation.
-				"${TM_SELECTED_TEXT/([\\S\\s]*)\\\\\\[\\s*([\\S\\s]*?)\\s*([,.]{0,1})\\s*\\\\\\]([\\S\\s]*)/$1$$2$$3$4/s}",
-				
-			],
-			"description": "Convert a display equation to an inline equation."
-		},
-		"Subequations":{
-			"prefix": ["\\subequations", "\\begin{subequations}", "equations group", "equation group"],
-			"description": "Insert a group of equations that share the number, e.g., (3a), (3b), (3c).",
-			"body": [
-				"\\begin{subequations}",
-				"\t\\label{eq:${1:equation block label}}",
-				"\t\\begin{align}",
-				"\t\t$0",
-				"\t\\end{align}",
-				"\\end{subequations}"
-			]
-		},
-		// Lists: Enumerate, Itemize, and Description
-		"Add \\item after each line break":{
-			"prefix": ["\\itemafterlines"],
-			"body": [
-				"${TM_SELECTED_TEXT/(\\n)(\\s*)/$1$2\\item /g}"
-			],
-			"description": "Insert a citation."
-		},
-		"Itemize with \\item after each line":{
-			"prefix": ["\\itemize"],
-			"body": [
-				"\\begin{itemize}",
-				"\t\\item ${TM_SELECTED_TEXT/(\\n)(\\s*)/$1$2\\item /g}",
-				"\\end{itemize}",
-				""
-			],
-			"description": "Insert a citation."
-		},
-		// CITATIONS AND REFERENCES //
-		"Citation":{
-			"prefix": ["\\cite"],
-			"body": [
-				"\\cite{$1}$0"
-			],
-			"description": "Insert a citation."
-		},
-		"Clever Reference":{
-			"prefix": ["\\cref", "\\ref"],
-			"body": [
-				"\\cref{$1}$0"
-			],
-			"description": "Insert an internal reference."
-		},
-		// "Section":{
-		// 	"prefix": ["\\section"],
-		// 	"body": [
-		// 		"",
-		// 		"%===================================",
-		// 		"%===================================",
-		// 		"\\section{$TM_SELECTED_TEXT${1:Header}}",
-		// 		"$0"
-		// 	]
-		// },
-		"Section Labeled":{
-			// "prefix": ["\\sectionlabeled"],
-			"prefix": ["\\section"],
-			"body": [
-				"",
-				"%===================================",
-				"%===================================",
-				"\\section{$TM_SELECTED_TEXT${1:Header}}",
-				"\\label{sec:${TM_SELECTED_TEXT/[\\\\&\\v\\{\\}\\[\\]$]//g}${1/[\\\\&\\\\{\\}\\[\\]$]//g}}",
-				"$0"
-			]
-		},
-		"Subsction":{
-			"prefix": ["\\subsection"],
-			"body": [
-				"",
-				"%================================",
-				"\\subsection{$TM_SELECTED_TEXT${1:Header}}",
-				"\\label{sec:${TM_SELECTED_TEXT/[\\\\&\\v\\{\\}\\[\\]$]//g}${1/[\\\\&\\v\\{\\}\\[\\]$]//g}}",
-				"$0"
-			]
-		},
-		"Subsubsction":{
-			"prefix": ["\\subsubsection"],
-			"body": [
-				"",
-				"\\subsubsection{$TM_SELECTED_TEXT${1:Header}}",
-				"\\label{sec:${TM_SELECTED_TEXT/[\\\\&\\v\\{\\}\\[\\]$]//g}${1/[\\\\&\\v\\{\\}\\[\\]$]//g}}",
-				"$0"
-			]
-		},
-		"Label":{
-			"prefix": ["\\label"],
-			"body": [
-				"\\label{${1:type}:${2:label}}$0"
-			]
-		},
-		"Inner product":{
-			"prefix": ["\\ip"],
-			"body": [
-				"\\ip{$TM_SELECTED_TEXT$1}{$2}$0 "
-			]
-		},
-		"Absolute value":{
-			"prefix": ["\\abs"],
-			"body": [
-				"\\abs{$TM_SELECTED_TEXT$1}$0 "
-			]
-		},
-		"Norm":{
-			"prefix": ["\\norm"],
-			"body": [
-				"\\norm{$TM_SELECTED_TEXT$1}$0 "
-			]
-		},
-		"Neighborhood":{
-			"prefix": ["nbd"],
-			"body": [
-				"neighborhood"
-			]
-		},
-		"With Respect To":{
-			"prefix": ["wrt"],
-			"body": [
-				"with respect to "
-			]
-		},
-		"Emphasis":{
-			"prefix": ["epmh","\\emph"],
-			"body": [
-				"\\emph{$TM_SELECTED_TEXT$1}$0"
-			]
-		},
-		"Bold":{
-			"prefix": ["bold","\\bold"],
-			"body": [
-				"\\textbf{$TM_SELECTED_TEXT$1}$0"
-			]
-		},
-		"Teletype":{
-			"prefix": ["t","\\tt"],
-			"body": [
-				"\\texttt{$TM_SELECTED_TEXT$1}$0"
-			]
-		},
-		"Color":{
-			"prefix": ["\\color"],
-			"body": [
-				"{\\color{${1|darkred,darkgreen,darkblue,black|}}$TM_SELECTED_TEXT$2}$0"
-			]
-		},
-		"Color Multiline":{
-			"prefix": "\\colorblock",
-			"body": [
-				"{\\color{${1|darkred,darkgreen,darkblue,black|}}%%%%%%%%%% COLOR: $1 %%%%%",
-				"$TM_SELECTED_TEXT$0",
-				"}%%%%%%%%%% END COLOR: $1 %%%%%"
-			]
-		},
-		"Green":{
-			"prefix": ["\\green"],
-			"body": [
-				"{\\color{darkgreen}$TM_SELECTED_TEXT$2}$0"
-			]
-		},
-		"Red":{
-			"prefix": ["\\red"],
-			"body": [
-				"{\\color{darkred}$TM_SELECTED_TEXT$2}$0"
-			]
-		},
-		"Hyperlink (includes link)":{
-			"prefix": ["\\href","\\hyperlink", "\\url"],
-			"body": [
-				"\\href{${1:url}}{$TM_SELECTED_TEXT$2}$0"
-			]
-		},
-		"Hyperlink (no link)":{
-			"prefix": ["\\url"],
-			"body": [
-				"\\url{$TM_SELECTED_TEXT$2}$0"
-			]
-		},
-		"Assumption (labeled)":{
-			"prefix": ["\\assumption (labeled)"],
-			"body": [
-				"\\begin{assumption}\\setupAssumption{${2:A}}",
-				"\t\\label{assump:${1:label}}",
-				"\t$TM_SELECTED_TEXT$0",
-				"\\end{assumption}",
-				""
-			]
-		},
-		"Definition (labeled)":{
-			"prefix": ["\\definition (labeled)"],
-			"body": [
-				"\\begin{definition}[${1:Name of Defined Term}]",
-				"\t\\label{def:${1:label}}",
-				"\t$TM_SELECTED_TEXT$0",
-				"\\end{definition}"
-			]
-		},
-		"Example (labeled)":{
-			"prefix": ["\\example (labeled)"],
-			"body": [
-				"\\begin{example}[${2:Example Name}]",
-					"\t\\label{example:${1:Example Name}}",
-					"\t$TM_SELECTED_TEXT$0",
-				"\\end{example}"
-			]
-		},
-		"Added":{
-			"prefix": ["\\added"],
-			"body": [
-				"\\added{$TM_SELECTED_TEXT$1}$0"
-			]
-		},
-		"Added Multi-line":{
-			"prefix": ["\\added%"],
-			"body": [
-				"\\added{%%%%%%%%%% ADDED %%%%%",
-				"$TM_SELECTED_TEXT$0",
-				"}%%%% END ADDED %%%%"
-				// "" // Ensure there is a new line at end
-			]
-		},
-		"Added Block Environment":{
-			"prefix": ["\\addedblock"],
-			"body": [
-				"\\begin{addedblock}%",
-				"$TM_SELECTED_TEXT$0",
-				"\\end{addedblock}%"
-				// "" // Ensure there is a new line at end
-			]
-		},
-		"Deleted":{
-			"prefix": ["\\deleted"],
-			"body": [
-				"\\deleted{$TM_SELECTED_TEXT$1}$0"
-			]
-		},
-		"Deleted Multiline":{
-			"prefix": ["\\deleted%"],
-			"body": [
-				"\\deleted{%%%%%%%%%% DELETED %%%%%",
-				"\t$TM_SELECTED_TEXT$0",
-				"}%%%%%%%%%% END DELETED %%%%%",
-				// "" // Ensure there is a new line at end
-			]
-		},
-		"Deleted Block Environment":{
-			"prefix": ["\\deleted%", "\\deletedblock"],
-			"body": [
-				"\\begin{deletedblock}%",
-				"\t$TM_SELECTED_TEXT$0",
-				"\\end{deletedblock}%"
-				// "" // Ensure there is a new line at end
-			]
-		},
-		"Replaced":{
-			"prefix": ["\\replaced"],
-			"body": [
-				"\\replaced{$TM_SELECTED_TEXT$1}{$TM_SELECTED_TEXT}$0"
-			]
-		},
-		"Replaced Block":{
-			"prefix": ["\\replaced%", "\\replaced (block)"],
-			"body": [
-				"\\replaced{% New Text",
-				"$TM_SELECTED_TEXT$0",
-				"}{% Old Text",
-				"\t$TM_SELECTED_TEXT",
-				"}% End \\replaced block",
-				// "" // Ensure there is a new line at end
-			]
-		},
-		"Vertical Box (no page breaks)":{
-			"prefix": ["\\vbox", "\\nopagebreaks"],
-			"body": [
-				"\\vbox{% Vertical block",
-					"\t$TM_SELECTED_TEXT$0",
-				"}% End \\vbox",
-				"" // Ensure there is a new line at end
-			]
-		},
-		"Figure":{
-			"prefix": ["\\fig", "\\figure"],
-			"body": [
-				"\\begin{figure}[htbp]",
-					"\t\\centering",
-					"\t\\includegraphics{$TM_SELECTED_TEXT$1}",
-					"\t\\caption{$2}",
-					"\t\\label{fig:$3}",
-				"\\end{figure}%",
-				"" // Ensure there is a new line at end
-			]
-		},
-		"Inline Table":{
-			"prefix": ["table", "tabular"],
-			"body": [
-				"\\begin{center}",
-						"\t\\begin{tabular}{$1}",
-								"\t\t$TM_SELECTED_TEXT$0",
-						"\t\\end{tabular}",
-				"\\end{center}"
-			]
-		},
-		"New Command":{
-			"prefix": ["\\newcommand"],
-			"body": [
-				"\\newcommand{\\\\${1:cmd}}{$TM_SELECTED_TEXT$2}$0"
-			]
-		},
-		"Group (Variable Scope)":{
-			"prefix": ["\\begingroup", "\\group"],
-			"body": [
-				"\\begingroup",
-				"$TM_SELECTED_TEXT$0",
-				"\\endgroup"
-			]
-		},
-		"Environment":{
-			"prefix": ["\\begin{ "],
-			"body" : [
-				"\\begin{$1}",
-				"\t$TM_SELECTED_TEXT$0",
-				"\\end{$1}"
-			]
-		},
-		"Make @ a letter":{
-			"prefix": ["\\makeat", "\\makeatletter"],
-			"body": [
-				"\\makeatletter",
-				"\t$TM_SELECTED_TEXT$0", 
-				"\\makeatother"
-			]
-		},
-		"Theorem":{
-			"prefix": ["\\theorem", "\\begin{theorem}", "theorem"],
-			"body": [
-				"\\begin{theorem}",
-					"\t\\label{result:${1:name}}",
-					"\t$TM_SELECTED_TEXT$0",
-				"\\end{theorem}",
-				""
-			]
-		},
-		"Proposition":{
-			"prefix": ["\\proposition", "\\begin{proposition}", "proposition"],
-			"body": [
-				"\\begin{proposition}",
-					"\t\\label{result:${1:name}}",
-					"\t$TM_SELECTED_TEXT$0",
-				"\\end{proposition}",
-				""
-			]
-		},
-		"Lemma":{
-			"prefix": ["\\lemma", "\\begin{lemma}", "lemma"],
-			"body": [
-				"\\begin{lemma}",
-					"\t\\label{result:${1:name}}",
-					"\t$TM_SELECTED_TEXT$0",
-				"\\end{lemma}",
-				""
-			]
-		},
-		"Conjecture":{
-			"prefix": ["\\conjecture", "\\begin{conjecture}", "conjecture"],
-			"body": [
-				"\\begin{conjecture}",
-					"\t\\label{result:$RANDOM_HEX}",
-					"\t$TM_SELECTED_TEXT$0",
-				"\\end{conjecture}",
-				""
-			]
-		},
-		"Proof":{
-			"prefix": ["\\proof", "\\begin{proof}", "proof"],
-			"body": [
-				"\\begin{proof}",
-					"\t$TM_SELECTED_TEXT$0",
-				"\\end{proof}",
-				""
-			]
-		},
-		"Proof Draft":{
-			"prefix": ["\\proofdraft", "proofdraft"],
-			"body": [
-				"\\begin{proof}[{\\color{red}Proof Draft}]",
-					"\t$TM_SELECTED_TEXT$0",
-				"\\end{proof}",
-				""
-			]
-		},
-		"Report only":{
-			"prefix": ["\\reportonly"],
-			"body": [
-				"\\reportonly{$TM_SELECTED_TEXT$1}$0"
-			]
-		},
-		"Report Multi-line":{
-			"prefix": ["\\reportonly%"],
-			"body": [
-				"\\reportonly{%",
-				"\t$TM_SELECTED_TEXT$0",
-				"}% End of \\reportonly",
-				// "" // Ensure there is a new line at end
-			]
-		},
-		"Report Only Block":{
-			"prefix": ["\\reportonlyblock"],
-			"body": [
-				"\\begin{reportonlyblock}%",
-				"\t$TM_SELECTED_TEXT$0",
-				"\\end{reportonlyblock}%",
-				// "" // Ensure there is a new line at end
-			]
-		},
-		"Conference only":{
-			"prefix": ["\\confonly"],
-			"body": [
-				"\\confonly{$TM_SELECTED_TEXT$1}$0"
-			]
-		},
-		"Conference Only Multi-line":{
-			"prefix": ["\\confonly%"],
-			"body": [
-				"\\confonly{%",
-				"\t$TM_SELECTED_TEXT$0",
-				"}% End of \\confonly",
-				// "" // Ensure there is a new line at end
-			]
-		},
-		"Conference Only Block":{
-			"prefix": ["\\confonlyblock"],
-			"body": [
-				"\\begin{confonlyblock}%",
-				"\t$TM_SELECTED_TEXT$0",
-				"\\end{confonlyblock}%y",
-				// "" // Ensure there is a new line at end
-			]
-		},
-		"Working Note":{
-			"prefix": ["\\workingnote"],
-			"body": [
-				"\\workingnote{$TM_SELECTED_TEXT$0}"
-			]
-		},
-		"Working Note Multiline":{
-			"prefix": ["\\workingnote%"],
-			"body": [
-				"\\workingnote{%",
-				"\t$TM_SELECTED_TEXT$0",
-				"}% End of \\workingnote",
-				// "" // Ensure there is a new line at end
-			]
-		},
-		"Working Note Block":{
-			"prefix": ["\\workingnoteblock"],
-			"body": [
-				"\\begin{workingnoteEnv}%",
-				"\t$TM_SELECTED_TEXT$0",
-				"\\end{workingnoteEnv}%",
-				// "" // Ensure there is a new line at end
-			]
-		},
-		// MATH SYMBOLS //
-		"sin(theta)": {
-			"prefix": "\\st",
-			"body": ["\\sin\\theta"]
-		},
-		"cos(theta)": {
-			"prefix": "\\ct",
-			"body": ["\\cos\\theta"]
-		}
-		,
-		"sin^2(theta)": {
-			"prefix": "\\s2t",
-			"body": ["\\sin^2\\theta"]
-		},
-		"cos^2(theta)": {
-			"prefix": "\\c2t",
-			"body": ["\\cos^2\\theta"]
-		},	
-		// "Memory" symbols.
-		"Memory Sum (Memorize)":{
-			"prefix": ["\\memsum*"],
-			"body": [
-				"\\memsum*[$1=${2:0}][${3:\\infty}] $0"
-			]
-		},
-		"Memory Product (Memorize)":{
-			"prefix": ["\\memprod*"],
-			"body": [
-				"\\memprod*[$1=${2:0}][${3:\\infty}] $0"
-			]
-		},
-		"Memory Limit (Memorize)":{
-			"prefix": ["\\memlim*"],
-			"body": [
-				"\\memlim*[$1\\to $2] $0"
-			]
-		},
-		"Memory Limit (Recall)":{
-			"prefix": ["\\memlim"],
-			"body": [
-				"\\memlim $0"
-			]
-		},
-		"Memory Integer (Memorize)":{
-			"prefix": ["\\memint*"],
-			"body": [
-				"\\memint*[${1:lower limit}][${2:upper limit}][d${3:x}]{$TM_SELECTED_TEXT$4} $0"
-			]
-		},
-		"Memory Integer (Recall)":{
-			"prefix": ["\\memint"],
-			"body": [
-				"\\memint{$TM_SELECTED_TEXT$1} $0"
-			]
-		},
-		"Memory Sequence (Memorize)":{
-			"prefix": ["\\memseq*"],
-			"body": [
-				"\\memseq*[${1:j}=${2:0}][${3:\\infty}]{$TM_SELECTED_TEXT$4}$0"
-			]
-		},
-		"Memory Sequence (Recall)":{
-			"prefix": ["\\memseq"],
-			"body": [
-				"\\memseq{$TM_SELECTED_TEXT$1}$0"
-			]
-		},
-		"Memory Supremum (Memorize)":{
-			"prefix": ["\\memsup*"],
-			"body": [
-				"\\memsup*[$1] $0"
-			]
-		},
-		"Memory Supremum (Recall)":{
-			"prefix": ["\\memsup"],
-			"body": [
-				"\\memsup $0"
-			]
-		},
-		"Memory Infimum (Memorize)":{
-			"prefix": ["\\meminf*"],
-			"body": [
-				"\\meminf*[$1] $0"
-			]
-		},
-		"Memory Infimum (Recall)":{
-			"prefix": ["\\meminf"],
-			"body": [
-				"\\meminf $0"
-			]
-		},
-		"Auto cases":{
-			"prefix": ["autocases", "\\begin{autocases}"],
-			"body": [
-				"\\begin{autocases}",
-					"\t$TM_SELECTED_TEXT$1 if $2 \\\\\\\\",
-					"\t$3 if $4",
-				"\\end{autocases}"
-			]
-		},
-		// "End-Begin":{
-		// 	"prefix": ["\\endbegin"],
-		// 	"body": [
-		// 		"\\end{$1}",
-		// 		"",
-		// 		"\\begin{$1}$TM_SELECTED_TEXT$0",
-		// 	]
-		// },
-		"Inline To-do":{
-			"prefix": ["\\todoinline", "\\todo[inline]"],
-			"body": [
-				"\\todo[inline]{%", 
-				"\tTo-do: $TM_SELECTED_TEXT$0",
-				"}"
-			]
-		},
-		"Comment from Ricardo":{
-			"prefix": ["\\commentFromRicardo"],
-			"body": [
-				"\\todo[inline]{%", 
-				"\t\\textbf{Comment from Ricardo ($\\sim$$CURRENT_MONTH_NAME $CURRENT_DATE, $CURRENT_YEAR):} $TM_SELECTED_TEXT$0",
-				"}"
-			]
-		},
-		//|################|
-		//| HYBRID SYSTEMS |
-		//|################|
-		"Hybrid system (text)":{
-			"prefix": ["HS"],
-			"body": [
-				"hybrid system"
-			]
-		},
-		"Hybrid system":{
-			"prefix": ["\\hybridsystem"],
-			"body": [
-				"\\system{",
-				"\t\\dot{${1:x}}\\phantom{^{+}} &= f(${1:x}) & C &:= \\setdef{${1:x} \\in \\realsn \\suchthat $2} \\\\\\\\",
-				"\t {${1:x}}^{+} &= g(${1:x}) & D &:= \\setdef{${1:x} \\in \\realsn \\suchthat $3}",
-				"}"
-			]
-		},
-		"Hybrid System Data":{
-			"prefix": ["\\CfDg"],
-			"body": [
-				"(C, f, D, g)"
-			]
-		},
-		"Matrix (inline)":{
-			"prefix": ["\\mat"],
-			"body": [
-				"\\mat{$TM_SELECTED_TEXT$1}$0",
-			]
-		},
-		"Matrix (multiline)":{
-			"prefix": ["\\matml"],
-			"body": [
-				"\\mat{",
-				"\t$TM_SELECTED_TEXT$1",
-				"}$0",
-			]
-		},
-		"Line break":{
-			"prefix": ["\\\\ "],
-			"body": [
-				"\\\\\\\\",
-				"$0"
-			]
-		},
-		"Set builder notation":{
-			"prefix": ["\\setbuild"],
-			"body": [
-				"\\setdef{$TM_SELECTED_TEXT${1:x} \\suchthat $2} $0"
-			]
-		},
-		"Set definition":{
-			"prefix": ["\\setdef"],
-			"body": [
-				"\\setdef{$TM_SELECTED_TEXT$1} $0"
-			]
-		},
-		"In set":{
-			"prefix": ["\\in{}"],
-			"body": [
-				"\\in \\{${1}\\\\}$0"
-			]
-		},
-		"Set of Natural Numbers":{
-			"prefix": ["\\N"],
-			"body": [
-				"\\naturals"
-			]
-		},
-		"Set of Real Numbers":{
-			"prefix": ["\\R"],
-			"body": [
-				"\\reals"
-			]
-		},
-		"Set of Complex Numbers":{
-			"prefix": ["\\C"],
-			"body": [
-				"\\complexes"
-			]
-		},
-		"Cyber-physical":{
-			"prefix": ["CP", "cyber-physical"],
-			"body": [
-				"cyber-physical"
-			]
-		},
-		"Cyber-physical system":{
-			"prefix": ["CPS", "cyber-physical system"],
-			"body": [
-				"cyber-physical system"
-			]
-		},
-		// ======== BOOLEANS and CONDITIONALS ============
-		"\\If Boolean":{
-			"prefix": ["\\ifbool"],
-			"body": [
-				"\\ifbool{${1:bool name}}%",
-				"{% If ${1:bool name} is true...",
-				"\t$TM_SELECTED_TEXT",
-				"}{% If ${1:bool name} is false",
-				"}%"
-			]
-		},
-		"Switch block":{
-			"prefix": ["switch", "\\begin{switch}"],
-			"body": [
-				"\\begin{switch}{${1:value}}%",
-					"\t\\case{${2:condition}}{$4}%",
-					"\t\\case{${3:condition}}{$5}%",
-					"\t\\otherwise{$6}%",
-				"\\end{switch}%"
-			]
-		},
-		"If Math Mode":{
-			"prefix": ["\\ifmmode", "\\ifmathmode", "\\ifequation"],
-			"body": [
-				"\\ifmmode% If in math mode",
-				"\t$TM_SELECTED_TEXT${1:math mode code}",
-				"\\else% If in text mode",
-				"\t${2:text mode code}",
-				"\\fi% End of if in math mode"
-			]	
-		},
-		"If class loaded": {
-			"prefix": ["\\@ifclassloaded", "\\ifclassloaded"],
-			"body": [
-				"\\@ifclassloaded{${1:document class}}{% If using $1 class...", 
-				"\t$TM_SELECTED_TEXT$0", 
-				"}{}%",
-				""
-			]
-		},
-		"If package loaded": {
-			"prefix": ["\\@ifpackageloaded", "\\ifpackageloaded"],
-			"body": [
-				"\\@ifpackageloaded{${1:package}}{% If $1 package...", 
-				"\t$TM_SELECTED_TEXT$0", 
-				"}{}%",
-				""
-			]
-		},
-		// ======== COLUMNS =========
-		"Two Columns":{
-			"prefix": ["\\columns (2)","\\twocolumns"],
-			"body": [
-				"\\begin{columns}",
-					"\t\\begin{column}[T]{0.48\\textwidth}",
-						"\t\t$TM_SELECTED_TEXT$1",
-					"\t\\end{column}",
-					"\t\\hfill",
-					"\t\\begin{column}[T]{0.48\\textwidth}",
-						"\t\t$2",
-					"\t\\end{column}",
-				"\\end{columns}",
-				"$0"
-			]
-		},
-		"Three Columns":{
-			"prefix": ["\\columns (3)", "\\threecolumns"],
-			"body": [
-				"\\begin{columns}",
-					"\t\\begin{column}[T]{0.31\\textwidth}",
-						"\t\t$TM_SELECTED_TEXT$1",
-					"\t\\end{column}",
-					"\t\\hfill",
-					"\t\\begin{column}[T]{0.31\\textwidth}",
-						"\t\t$2",
-					"\t\\end{column}",
-					"\t\\hfill",
-					"\t\\begin{column}[T]{0.31\\textwidth}",
-						"\t\t$3",
-					"\t\\end{column}",
-				"\\end{columns}",
-				"$0"
-			]
-		},
-		"Four Columns":{
-			"prefix": ["\\columns (4)", "\\fourcolumns"],
-			"body": [
-				"\\begin{columns}",
-					"\t\\begin{column}[T]{0.23\\textwidth}",
-						"\t\t$TM_SELECTED_TEXT$1",
-					"\t\\end{column}",
-					"\t\\hfill",
-					"\t\\begin{column}[T]{0.23\\textwidth}",
-						"\t\t$2",
-					"\t\\end{column}",
-					"\t\\hfill",
-					"\t\\begin{column}[T]{0.23\\textwidth}",
-						"\t\t$3",
-					"\t\\end{column}",
-					"\t\\hfill",
-					"\t\\begin{column}[T]{0.23\\textwidth}",
-						"\t\t$4",
-					"\t\\end{column}",
-				"\\end{columns}",
-				"$0"
-			]
-		},
-		"Full-width Minipage (no page breaks)":{
-			"prefix": ["\\minipage", "\\nopagebreak"],
-			"body": [
-				"\\begin{minipage}{\\linewidth}%",
-					"\t\\centering",
-					"\t$TM_SELECTED_TEXT$0",
-				"\\end{minipage}%"
-			]
-		},
-		// Insert columns
-		"Two Columns (Minipages)":{
-			"prefix": ["\\minipage columns (2)","\\twominipages"],
-			"body": [
-				"\\begin{minipage}{0.49\\linewidth}%",
-					"\t\\centering",
-					"\t$TM_SELECTED_TEXT$1",
-				"\\end{minipage}%",
-				"\\hfill",
-				"\\begin{minipage}{0.49\\linewidth}%",
-						"\t\\centering",
-						"\t$2",
-				"\\end{minipage}%",
-				"$0"
-			]
-		},
-		"Two Columns (Table)":{
-			"prefix": ["\\table columns (2)","\\twocolumntable"],
-			"body": [
-				"\\begin{center}",
-						"\t\\begin{tabular}{p{0.47\\linewidth}p{0.47\\linewidth}}",
-							"\t\t$TM_SELECTED_TEXT$1 & $0",
-						"\t\\end{tabular}",
-				"\\end{center}"
-			]
-		},
-		"Three Columns (Table)":{
-			"prefix": ["\\table columns (3)","\\threecolumntable"],
-			"body": [
-				"\\begin{center}",
-						"\t\\begin{tabular}{p{0.31\\linewidth}p{0.31\\linewidth}p{0.31\\linewidth}}",
-							"\t\t$TM_SELECTED_TEXT$1 & $2 & $0",
-						"\t\\end{tabular}",
-				"\\end{center}"
-			]
-		},
-		"Four Columns (Table)":{
-			"prefix": ["\\table columns (4)","\\fourcolumntable"],
-			"body": [
-				"\\begin{center}",
-					"\t\\begin{tabular}{p{0.23\\linewidth}p{0.23\\linewidth}p{0.23\\linewidth}p{0.23\\linewidth}}",
-							"\t\t$TM_SELECTED_TEXT$1 & $2 & $3 & $0",
-						"\t\\end{tabular}",
-				"\\end{center}"
-			]
-		},
-		// ======== BEAMER ==========
-		"Beamer Frame":{
-			"prefix": ["\\frame", "\\begin{frame}"],
-			"body": [
-				"\\begin{frame}{${1:title}}",
-				"\t$TM_SELECTED_TEXT$0",
-				"\\end{frame}"
-			]
-		},
-		"Beamer Frame (Top aligned)":{
-			"prefix": ["\\frametop", "\\begin{frame}[t]", "frame top"],
-			"body": [
-				"\\begin{frame}[t]{${1:title}}",
-				"\t$TM_SELECTED_TEXT$0",
-				"\\end{frame}"
-			]
-		},
-		"Structure":{
-			"prefix": ["\\structure"],
-			"body": [
-				"\\structure{$TM_SELECTED_TEXT$1}$0"
-			]
-		},
-		"Structure (Math)":{
-			// Requires "\newcommand{\mstructure}[1]{{\color{structure} #1}}"
-			"prefix": ["\\mstructure", "\\structure (math)"],
-			"body": [
-				"\\mstructure{$TM_SELECTED_TEXT$1}$0"
-			]
-		},
-		"Only Exist on Slide":{
-			"prefix": "\\only",
-			"body": "\\only<${1:overlay specification}>{$TM_SELECTED_TEXT$0}"
-		},
-		"Only Exist on Slide (Block)":{
-			"prefix": "\\onlyblock",
-			"body": [
-				"\\only<${1:overlay specification}>{%",
-					"\t$TM_SELECTED_TEXT$0", 
-				"}% End only block"
-			]
-		},
-		"Only Shown on Slide":{
-			"prefix": "\\onslide",
-			"body": "\\onslide<${1:overlay specification}>{$TM_SELECTED_TEXT$0}"
-		},
-		"Only Shown on Slide (Block)":{
-			"prefix": "\\onslideblock",
-			"body": [
-				"\\onslide<${1:overlay specification}>{%",
-					"\t$TM_SELECTED_TEXT$0", 
-				"}% End only block"
-			]
-		},
-		"Pause After Itemize or <+->":{
-			"prefix": ["\\pauseafter<+->", "\\pauseAfterItemize"],
-			"body": [
-				"\\pause[\\thebeamerpauses]",
-				"$0"
-			]
-		}
-	}
+// cSpell:disable
+{
+  // Place your snippets for latex here. Each snippet is defined under a snippet name and has a prefix, body and 
+  // description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+  // $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the same ids are connected.
+  //////////////////////////////////////////
+  // ╭────────────────────────────────────────────────────╮
+  // │ ╭────────────────────────────────────────────────╮ │
+  // │ │             Document Configuration             │ │
+  // │ ╰────────────────────────────────────────────────╯ │
+  // ╰────────────────────────────────────────────────────╯
+  "Set packages path": {
+    "prefix": "\\setpackagespath",
+    "body": [
+            "% Change the search path to include \"${1:./packages}/\".",
+            "\\makeatletter",
+            "\\def\\input@path{{${1:./packages}/}}",
+            "\\makeatother",
+            ""
+          ]
+  },
+  // ╭───────────────────────────────────────╮
+  // │ ╭───────────────────────────────────╮ │
+  // │ │             Equations             │ │
+  // │ ╰───────────────────────────────────╯ │
+  // ╰───────────────────────────────────────╯
+  "Display Equation":{
+    "prefix": ["\\["],
+    "body": [
+      // If the current line is not empty, then insert an empty line.
+      "${TM_CURRENT_LINE/(?:^(\\s*)\\S.*$|(^\\s*$))/${1:+\n}$1/}\\[",
+        "\t$TM_SELECTED_TEXT$1",
+      "\\] $0"
+    ],
+    "description": "Insert block equation with line-breaks and indentation."
+  },
+  "Inline Equation":{
+    "body": [
+      "$$TM_SELECTED_TEXT$1$$0"
+    ],
+    "description": "Insert inline equation."
+  },
+  "Equation Environment":{
+    "prefix": ["\\equation"],
+    "body": [
+      "\\begin{equation}",
+        "\t\\label{eq:${RANDOM_HEX/(.*)/${1:/upcase}/}}",
+        // Regex (unescaped): \s*(?:\\\[\s*((?:.(?:\s*)??)*)\s*\\\]|((?:.|\s)+))\s*
+        //   Match either "  \[ \n .... \] " or just the entire contents and insert it as the body of the equation.
+        //   Explanation:
+        //      (?:\s*)??: Match any number of spaces *including line breaks* but 
+        //								 only if needed to allow for subsequent non-space characters.
+        "\t${TM_SELECTED_TEXT/\\s*(?:\\s*\\\\\\[\\s*((?:.(?:\\s*\\S)?)*)\\s*\\\\\\]\\s*|((?:.|\\s)+))\\s*/$1$2/}$1$0",
+      "\\end{equation}",
+      ""
+    ],
+    "description": "Insert equation environment with a random hexadecimal label."
+  },
+  "Generate Equation Label":{
+    "prefix": ["\\eqlabel"],
+    "body": [
+      // Automatically generate a label from the contents of the equation, deleting any backslashes or ampersands.
+      "\\label{eq:${TM_SELECTED_TEXT/[\\\\&,]//g}${1/[\\\\&,]//g}$1}",
+      "$TM_SELECTED_TEXT$0"
+    ],
+    "description": "Create an equation label that is automatically generated from the selected text."
+  },
+  "Display Equation to Equation Environment":{
+    "body": [
+      // Group 1: Before text. "(.*?)"
+      // Group 2: Tab spaces before equation delimiter. "(\\h*)"
+      // Group 3: Equation contents "(.*?)"
+      // Group 4: After text "(.*)"
+      "${TM_SELECTED_TEXT/(.*?)(\\h*)\\\\\\[\\s*(.*?)\\s*\\\\\\](.*)/$1$2\\begin{equation}\n$2\t$3\n$2\\end{equation}\n/s}"
+    ],
+    "description": "Convert a display equation to an equation environment."
+  },
+  "Convert inline to display equation":{
+    "body": [
+      // Unescaped RegEx: ([\S\s]*)\$\s*(.*?)\s*\$([,.]{0,1})([\S\s]*)
+      // Group 1: Content before equation. ("[\S\s]" matches any character)
+      // Group 2: Contents of equation, stripping white space.
+      // Group 3: Punctuation after equation ("[,.]{0,1}" matches "," or "." zero or one times)
+      // Group 4: Content after equation
+      // We duplicate the Regex for each line so that VS code automatically inserts the correct indentation for us, instead of handling it in the regex.
+      "${TM_SELECTED_TEXT/([\\S\\s]*)\\$\\s*(.*?)\\s*\\$([,.]{0,1})\\s*([\\S\\s]*)/$1/s}",
+      "\\[",
+      // It's important to put "\t" before "${TM_SELECTED_TEXT...}" instead of inside it so that VS code inserts tabs or spaces according to you configuration. If it's inside the regex, then it inserts a tab character.
+      "\t${TM_SELECTED_TEXT/([\\S\\s]*)\\$\\s*(.*?)\\s*\\$([,.]{0,1})\\s*([\\S\\s]*)/$2$3/s}",
+      "\\]",
+      "${TM_SELECTED_TEXT/([\\S\\s]*)\\$\\s*(.*?)\\s*\\$([,.]{0,1})\\s*([\\S\\s]*)/$4/s}",
+    ],
+    "description": "Convert an inline equation to a display equation."
+  },
+  "Convert display to inline equation":{
+    "body": [
+      // Regular expression (unescaped): (.*)\\\[\s*\n*\s*(.*?)\s*\n*\s*\\\](.*)
+      // - "\s*" matches any number of spaces and line breaks around it.
+      // - "[\s\S]" matches any character, including line breaks and spaces.
+      // - "\\\[" Matches "\[" (there are three backslashes because "\\" matches "\" and "\[" matches "[").
+      // Group 1: All the content before the equation.
+      // Group 2: All the content in the equation, except for final punctuation  
+      // Group 3: Final punctuation ("[,.]{0,1}").
+      // Group 4: All the content after the equation.
+      "${TM_SELECTED_TEXT/([\\S\\s]*)\\\\\\[\\s*([\\S\\s]*?)\\s*([,.]{0,1})\\s*\\\\\\]([\\S\\s]*)/$1$$2$$3$4/s}",
+      
+    ],
+    "description": "Convert a display equation to an inline equation."
+  },
+  "Subequations":{
+    "prefix": ["\\subequations", "\\begin{subequations}", "equations group", "equation group"],
+    "description": "Insert a group of equations that share the number, e.g., (3a), (3b), (3c).",
+    "body": [
+      "\\begin{subequations}",
+      "\t\\label{eq:${1:equation block label}}",
+      "\t$TM_SELECTED_TEXT",
+      // "\t${2|$TM_SELECTED_TEXT,\\begin{align}",
+      // "\t\t$0",
+      // "\t\\end{align}|}",
+      "\\end{subequations}"
+    ]
+  },
+  
+  // ╭─────────────────────────────────────────╮
+  // │ ╭─────────────────────────────────────╮ │
+  // │ │             Multicursor             │ │
+  // │ ╰─────────────────────────────────────╯ │
+  // ╰─────────────────────────────────────────╯
+  // 
+  // "Cursor lowercase alphabet (a, b, c, ..., i)":{
+  //   "prefix": ["\\cursoralph", "\\alph"],
+  //   "body" : ["${CURSOR_NUMBER/(^1$)?(^2$)?(^3$)?(^4$)?(^5$)?(^6$)?(^7$)?(^8$)?(^9$)?(^10$)?(^11$)?(^12$)?(^13$)?(^14$)?(^15$)?(^16$)?(^17$)?(^18$)?(^19$)?(^20$)?(^21$)?(^22$)?(^23$)?(^24$)?(^25$)?(^26$)?/${1:+a}${2:+b}${3:+c}${4:+d}${5:+e}${6:+f}${7:+g}${8:+h}${9:+i}${10:+j}${11:+k}${12:+l}${13:+m}${14:+n}${15:+o}${16:+p}${17:+q}${18:+r}${19:+s}${20:+t}${21:+u}${22:+v}${23:+w}${24:+x}${25:+y}${26:+z}/}"]
+  // },
+  "\\left(...\\right) at multicursors":{
+    "prefix": ["\\left"],
+    "body" : ["${CURSOR_NUMBER/(^1$)?(^2$)?(^3$)?(^4$)?(^5$)?(^6$)?(^7$)?(^8$)?(^9$)?(^10$)?(^11$)?(^12$)?(^13$)?(^14$)?(^15$)?(^16$)?/${1:+\\\\left}${2:+\\\\right}${3:+\\\\left}${4:+\\\\right}${5:+\\\\left}${6:+\\\\right}${7:+\\\\left}${8:+\\\\right}${9:+\\\\left}${10:+\\\\right}${11:+\\\\left}${12:+\\\\right}${13:+\\\\left}${14:+\\\\right}${15:+\\\\left}${16:+\\\\right}/}"]
+  },
+  // ╭──────────────────────────────────────────────────────╮
+  // │ ╭──────────────────────────────────────────────────╮ │
+  // │ │             Enumeration Environments             │ │
+  // │ ╰──────────────────────────────────────────────────╯ │
+  // ╰──────────────────────────────────────────────────────╯
+  // Lists: Enumerate, Itemize, and Description
+  "Add \\item after each line break":{
+    "prefix": ["\\itemafterlines"],
+    "body": [
+      "${TM_SELECTED_TEXT/(\\n)(\\s*)/$1$2\\item /g}"
+    ]
+  },
+  "Itemize with \\item after each line":{
+    "prefix": ["\\itemize"],
+    "body": [
+      "\\begin{itemize}",
+      "\t\\item ${TM_SELECTED_TEXT/(\\n)(\\s*)/$1$2\\item /g}",
+      "\\end{itemize}",
+      ""
+    ]
+  },
+  "Case List": {
+    "prefix": ["\\caseList", "\\begin{caseList}"],
+    "body": [
+      "\\begin{caseList}",
+      "\t\\item $TM_SELECTED_TEXT$0",
+      "\\end{caseList}",
+      ""
+    ]
+  },
+  // "enumitem Options": {
+  //   "prefix": ["\\enumitemSpace"],
+  //   "body": [
+  //     "[", 
+  //     "\tlabelwidth=1em,   % Space for item",
+  //     "\tlabelsep=1em,     % Space between item and text",
+  //     "\tleftmargin=1em,   % Space from left of page to text edge (in lines below the label)", 
+  //     "\titemindent=1em    % Space from text edge to start of text after label",
+  //     "\tlistparindent=1em % Indentation in paragraphs after first paragraph in an item."
+  //   ],
+  //   "description": ""
+  // },
+  "enumitem text indentation": {
+    "prefix": ["\\enumitemTextIndentation"],
+    "body": [
+      "[",
+        "\tleftmargin=${1:0em}, % Indentation of the left edge of the text compared to the text outside of the list.",
+        "\titemindent=*    % Automatically calculate the identation of the text after the item label.",
+      "]"
+    ],
+    "description": ""
+  },
+  "enumitem start enumeration index": {
+    "prefix": ["\\enumitemStartValue", "\\enumitemFirstItem"],
+    "body": [
+      "[start=$1]"
+    ],
+    "description": "Use like \\begin{enumerate}[start=4] to start the list at item 4."
+  },
+  "enumitem resume list": {
+    "prefix": ["\\enumitemResumeList", "\\enumitemContinueList"],
+    "body": [
+      "[resume*]"
+    ],
+    "description": "Use like \\begin{enumerate}[resume*] to continue previous enumeration."
+  },
+  // ╭──────────────────────────────────────────────────────╮
+  // │ ╭──────────────────────────────────────────────────╮ │
+  // │ │             Citations And References             │ │
+  // │ ╰──────────────────────────────────────────────────╯ │
+  // ╰──────────────────────────────────────────────────────╯
+  "Citation":{
+    "prefix": ["\\cite"],
+    "body": [
+      "\\cite{$1}$0"
+    ],
+    "description": "Insert a citation."
+  },
+  "Clever Reference":{
+    "prefix": ["\\cref", "\\ref"],
+    "body": [
+      "\\cref{$1}$0"
+    ],
+    "description": "Insert an internal reference."
+  },
+  // "Section":{
+  // 	"prefix": ["\\section"],
+  // 	"body": [
+  // 		"",
+  // 		"%===================================",
+  // 		"%===================================",
+  // 		"\\section{$TM_SELECTED_TEXT${1:Header}}",
+  // 		"$0"
+  // 	]
+  // },
+  "Label":{
+    "prefix": ["\\label"],
+    "body": [
+      "\\label{${1:type}:${2:label}}$0"
+    ]
+  },
+  // ╭─────────────────────────────────────────────╮
+  // │ ╭─────────────────────────────────────────╮ │
+  // │ │             Section Headers             │ │
+  // │ ╰─────────────────────────────────────────╯ │
+  // ╰─────────────────────────────────────────────╯
+  "Section Labeled":{
+    // "prefix": ["\\sectionlabeled"],
+    "prefix": ["\\section"],
+    "body": [
+      "",
+      "%===================================",
+      "%===================================",
+      "\\section{$TM_SELECTED_TEXT${1:Header}}",
+      "\\label{sec:${TM_SELECTED_TEXT/[\\\\&\\v\\{\\}\\[\\]$]//g}${1/[\\\\&\\\\{\\}\\[\\]$]//g}}",
+      "$0"
+    ]
+  },
+  "Subsection":{
+    "prefix": ["\\subsection"],
+    "body": [
+      "",
+      "%================================",
+      "\\subsection{$TM_SELECTED_TEXT${1:Header}}",
+      "\\label{sec:${TM_SELECTED_TEXT/[\\\\&\\v\\{\\}\\[\\]$]//g}${1/[\\\\&\\v\\{\\}\\[\\]$]//g}}",
+      "$0"
+    ]
+  },
+  "Subsubsection":{
+    "prefix": ["\\subsubsection"],
+    "body": [
+      "",
+      "\\subsubsection{$TM_SELECTED_TEXT${1:Header}}",
+      "\\label{sec:${TM_SELECTED_TEXT/[\\\\&\\v\\{\\}\\[\\]$]//g}${1/[\\\\&\\v\\{\\}\\[\\]$]//g}}",
+      "$0"
+    ]
+  },
+  // ╭────────────────────────────────────────────╮
+  // │ ╭────────────────────────────────────────╮ │
+  // │ │             Math Fcuntions             │ │
+  // │ ╰────────────────────────────────────────╯ │
+  // ╰────────────────────────────────────────────╯
+  "Inner product":{
+    "prefix": ["\\ip"],
+    "body": [
+      "\\ip{${1:$TM_SELECTED_TEXT}}{$2}$0 "
+    ]
+  },
+  "Absolute value":{
+    "prefix": ["\\abs"],
+    "body": [
+      "\\abs{${1:$TM_SELECTED_TEXT}}$0 "
+    ]
+  },
+  "Norm":{
+    "prefix": ["\\norm"],
+    "body": [
+      "\\norm{${1:$TM_SELECTED_TEXT}}$0 "
+    ]
+  },
+  // ╭────────────────────────────────────────────╮
+  // │             Text abbreviations             │
+  // ╰────────────────────────────────────────────╯
+  "Neighborhood":{
+    "prefix": ["nbd"],
+    "body": [
+      "neighborhood"
+    ]
+  },
+  "With Respect To":{
+    "prefix": ["wrt"],
+    "body": [
+      "with respect to "
+    ]
+  },
+  "Want to Show":{
+    "prefix": ["wts"],
+    "body": [
+      "want to show "
+    ]
+  },
+  // ╭─────────────────────────────────────────╮
+  // │ ╭─────────────────────────────────────╮ │
+  // │ │             Text Styles             │ │
+  // │ ╰─────────────────────────────────────╯ │
+  // ╰─────────────────────────────────────────╯
+  // TODO: Add more font styles.
+  "Font Style Selection": {
+    "prefix": ["\\font", "\\fontstyle", "\\textstyle"],
+    "body": [
+      "\\${1|\\textfamily,\\textsize,\\textweight,|}{$TM_SELECTED_TEXT$2}$0"
+    ]
+  },
+  "Font Family Selection": {
+    "prefix": ["\\font", "\\fontstyle", "\\textstyle"],
+    "body": [
+      "\\${1|\\textrm,\\textsf,\\texttt|}{$TM_SELECTED_TEXT$2}$0"
+    ]
+  },
+  "Emphasis":{
+    "prefix": ["\\emph"],
+    "body": [
+      "\\emph{$TM_SELECTED_TEXT$1}$0"
+    ]
+  },
+  "Bold":{
+    "prefix": ["\\bold"],
+    "body": [
+      "\\textbf{$TM_SELECTED_TEXT$1}$0"
+    ]
+  },
+  "Text":{
+    "prefix": ["\\t","\\text"],
+    "body": [
+      "\\\\${1|text,textrm,textbf,textsf,texttt|}{$TM_SELECTED_TEXT$2}$0"
+    ]
+  },
+  // ╭────────────────────────────────╮
+  // │             Colors             │
+  // ╰────────────────────────────────╯
+  "Color":{
+    "prefix": ["\\color"],
+    "body": [
+      "{\\color{${1|darkred,darkgreen,darkblue,black|}}$TM_SELECTED_TEXT$2}$0"
+    ]
+  },
+  "Color Multiline":{
+    "prefix": "\\colorblock",
+    "body": [
+      "{\\color{${1|darkred,darkgreen,darkblue,black|}}%%%%%%%%%% COLOR: $1 %%%%%",
+      "$TM_SELECTED_TEXT$0",
+      "}%%%%%%%%%% END COLOR: $1 %%%%%"
+    ]
+  },
+  "Green":{
+    "prefix": ["\\green"],
+    "body": [
+      "{\\color{darkgreen}$TM_SELECTED_TEXT$2}$0"
+    ]
+  },
+  "Red":{
+    "prefix": ["\\red"],
+    "body": [
+      "{\\color{darkred}$TM_SELECTED_TEXT$2}$0"
+    ]
+  },
+  // ╭───────────────────────────────────────╮
+  // │             Textual Links             │
+  // ╰───────────────────────────────────────╯
+  "Hyperlink (includes link)":{
+    "prefix": ["\\href","\\hyperlink", "\\url"],
+    "body": [
+      "\\href{${1:url}}{$TM_SELECTED_TEXT$2}$0"
+    ]
+  },
+  "Hyperlink (no link)":{
+    "prefix": ["\\url"],
+    "body": [
+      "\\url{$TM_SELECTED_TEXT$2}$0"
+    ]
+  },
+  // "Assumption (labeled)":{
+  //   "prefix": ["\\assumption (labeled)"],
+  //   "body": [
+  //     "\\begin{assumption}\\setupAssumption{${2:A}}",
+  //     "\t\\label{assump:${1:label}}",
+  //     "\t$TM_SELECTED_TEXT$0",
+  //     "\\end{assumption}",
+  //     ""
+  //   ]
+  // },
+
+  // ╭──────────────────────────────────────────╮
+  // │ ╭──────────────────────────────────────╮ │
+  // │ │             Environments             │ │
+  // │ ╰──────────────────────────────────────╯ │
+  // ╰──────────────────────────────────────────╯
+  "Assumption":{
+    "prefix": ["\\assumption"],
+    "body": [
+      "\\begin{assumption}",
+      "\t\\label{assump:${1:label}}",
+      "\t$TM_SELECTED_TEXT$0",
+      "\\end{assumption}",
+      ""
+    ]
+  },
+  "Assumption List": {
+    "prefix": ["\\assumptionlist", "\\begin{assumptionlist}"],
+    "body": [
+      "\\begin{assumptionList}[${1:Letter}]",
+      "\t\\item $0", 
+      "\\end{assumptionList}",
+    ]
+  },
+  "Definition (labeled)":{
+    "prefix": ["\\definition (labeled)"],
+    "body": [
+      "\\begin{definition}[${1:Name of Defined Term}]",
+      "\t\\label{def:${1:label}}",
+      "\t$TM_SELECTED_TEXT$0",
+      "\\end{definition}"
+    ]
+  },
+  "Example (labeled)":{
+    "prefix": ["\\example (labeled)"],
+    "body": [
+      "\\begin{example}[${1:Example Name}]",
+        "\t\\label{example:${1:Example Name}}",
+        "\t$TM_SELECTED_TEXT$0",
+      "\\end{example}"
+    ]
+  },
+  "Theorem":{
+    "prefix": ["\\theorem", "\\begin{theorem}", "theorem"],
+    "body": [
+      "\\begin{theorem}",
+        "\t\\label{result:${1:name}}",
+        "\t$TM_SELECTED_TEXT$0",
+      "\\end{theorem}",
+      ""
+    ]
+  },
+  "Proposition":{
+    "prefix": ["\\proposition", "\\begin{proposition}", "proposition"],
+    "body": [
+      "\\begin{proposition}",
+        "\t\\label{result:${1:name}}",
+        "\t$TM_SELECTED_TEXT$0",
+      "\\end{proposition}",
+      ""
+    ]
+  },
+  "Lemma":{
+    "prefix": ["\\lemma", "\\begin{lemma}", "lemma"],
+    "body": [
+      "\\begin{lemma}",
+        "\t\\label{result:${1:name}}",
+        "\t$TM_SELECTED_TEXT$0",
+      "\\end{lemma}",
+      ""
+    ]
+  },
+  "Conjecture":{
+    "prefix": ["\\conjecture", "\\begin{conjecture}", "conjecture"],
+    "body": [
+      "\\begin{conjecture}",
+        "\t\\label{result:$RANDOM_HEX}",
+        "\t$TM_SELECTED_TEXT$0",
+      "\\end{conjecture}",
+      ""
+    ]
+  },
+  "Proof":{
+    "prefix": ["\\proof", "\\begin{proof}", "proof"],
+    "body": [
+      "\\begin{proof}",
+        "\t$TM_SELECTED_TEXT$0",
+      "\\end{proof}",
+      ""
+    ]
+  },
+  "Proof Draft":{
+    "prefix": ["\\proofdraft", "proofdraft"],
+    "body": [
+      "\\begin{proof}[{\\color{red}Proof Draft}]",
+        "\t$TM_SELECTED_TEXT$0",
+      "\\end{proof}",
+      ""
+    ]
+  },
+  // ╭─────────────────────────────────────────────────────────╮
+  // │ ╭─────────────────────────────────────────────────────╮ │
+  // │ │             Changes package annotations             │ │
+  // │ ╰─────────────────────────────────────────────────────╯ │
+  // ╰─────────────────────────────────────────────────────────╯
+  "Added":{
+    // Updated 2/28/25: Keep selected text selected so user can type to replace, TAB to move on, or "->" to to move to end of selection and edit.
+    "prefix": ["\\added"],
+    "body": [
+      "\\added{${1:$TM_SELECTED_TEXT}}$0"
+    ]
+  },
+  "Added Multi-line":{
+    "prefix": ["\\added%"],
+    "body": [
+      "\\added{%%%%%%%%%% ADDED %%%%%",
+      "$TM_SELECTED_TEXT$0",
+      "}%%%% END ADDED %%%%"
+      // "" // Ensure there is a new line at end
+    ]
+  },
+  "Added Block Environment":{
+    "prefix": ["\\addedblock"],
+    "body": [
+      "\\begin{addedblock}%",
+      "$TM_SELECTED_TEXT$0",
+      "\\end{addedblock}%"
+      // "" // Ensure there is a new line at end
+    ]
+  },
+  "Deleted":{
+    // Updated 2/28/25: Remove tab point inside argument, since user unlike to modify thing they are deleting.
+    "prefix": ["\\deleted"],
+    "body": [
+      "\\deleted{$TM_SELECTED_TEXT}$0"
+    ]
+  },
+  "Deleted Multiline":{
+    // Updated 2/28/25: Remove tab point inside argument, since user unlike to modify thing they are deleting.
+    "prefix": ["\\deleted%"],
+    "body": [
+      "\\deleted{%%%%%%%%%% DELETED %%%%%",
+      "\t$TM_SELECTED_TEXT",
+      "}%%%%%%%%%% END DELETED %%%%%",
+      // "" // Ensure there is a new line at end
+    ]
+  },
+  "Deleted Block Environment":{
+    // Updated 2/28/25: Remove tab point inside argument, since user unlike to modify thing they are deleting.
+    "prefix": ["\\deleted%", "\\deletedblock"],
+    "body": [
+      "\\begin{deletedblock}%",
+      "\t$TM_SELECTED_TEXT",
+      "\\end{deletedblock}%"
+      // "" // Ensure there is a new line at end
+    ]
+  },
+  "Replaced":{
+    // Updated 2/28/25: Keep selected text selected so user can type to replace, TAB to move on, or "->" to to move to end of selection and edit.
+    "prefix": ["\\replaced"],
+    "body": [
+      "\\replaced{${1:$TM_SELECTED_TEXT}}{$TM_SELECTED_TEXT}$0"
+    ]
+  },
+  // "Replaced Block":{    
+  //   // Updated 2/28/25: Keep selected text selected so user can type to replace, TAB to move on, or "->" to to move to end of selection and edit.
+  //   "prefix": ["\\replaced%", "\\replaced (block)"],
+  //   "body": [
+  //     "\\replaced{% New Text",
+  //     "${0:$TM_SELECTED_TEXT}",
+  //     "}{% Old Text",
+  //     "\t$TM_SELECTED_TEXT",
+  //     "}% End \\replaced block",
+  //     // "" // Ensure there is a new line at end
+  //   ]
+  // },
+  "Replaced Block Environment":{
+    // Updated 3/5/2025 to split the insertion into addedblock and deletedblock environments.
+    "prefix": ["\\replacedblock"],
+    "body": [
+      "\\begin{addedblock}% Start of replacement text",
+      "${0:$TM_SELECTED_TEXT}",
+      "\\end{addedblock}% End of replacement text",
+      "\\begin{deletedblock}% Start of replaced text",
+      "\t$TM_SELECTED_TEXT",
+      "\\end{deletedblock}% End of replaced text"
+      // "" // Ensure there is a new line at end
+    ]
+  },
+  "Vertical Box (no page breaks)":{
+    "prefix": ["\\vbox", "\\nopagebreaks", "\\singlepage"],
+    "body": [
+      "\\vbox{% Vertical block",
+        "\t$TM_SELECTED_TEXT$0",
+      "}% End \\vbox",
+      "" // Ensure there is a new line at end
+    ]
+  },
+  "Figure":{
+    "prefix": ["\\fig", "\\figure"],
+    "body": [
+      "\\begin{figure}[htbp]",
+        "\t\\centering",
+        "\t\\includegraphics{$TM_SELECTED_TEXT$1}",
+        "\t\\caption{$2}",
+        "\t\\label{fig:$3}",
+      "\\end{figure}%",
+      "" // Ensure there is a new line at end
+    ]
+  },
+  "Include PDF as Pages": {
+    "prefix": "\\includepdf (pages)",
+    "description": "Create pages from a PDF",
+    "body": [
+      "% Insert PDF pages",
+      "\\includepdf[pages=${1|-,{1},{1-2}|}]{${2:file path}}"
+    ]
+  },
+  "Include PDF as Graphic": {
+    "prefix": "\\includepdf (graphic)",
+    "description": "Insert image from a PDF",
+    "body": [
+      // When using \includegraphics, we do not put "{}" aroudn the page number.
+      "\\includegraphics[page=${1},width=\\textwidth]{${2:file path}}"
+    ]
+  },
+  "Environment":{
+    "prefix": ["\\begin{ "],
+    "body" : [
+      "\\begin{$1}",
+      "\t$TM_SELECTED_TEXT$0",
+      "\\end{$1}"
+    ]
+  },
+  // Report-only, Conference-only, and Working Note
+  "Report only":{
+    "prefix": ["\\reportonly"],
+    "body": [
+      "\\reportonly{$TM_SELECTED_TEXT$1}$0"
+    ]
+  },
+  "Report Multi-line":{
+    "prefix": ["\\reportonly%"],
+    "body": [
+      "\\reportonly{%",
+      "\t$TM_SELECTED_TEXT$0",
+      "}% End of \\reportonly",
+      // "" // Ensure there is a new line at end
+    ]
+  },
+  "Report Only Block":{
+    "prefix": ["\\reportonlyblock"],
+    "body": [
+      "\\begin{reportonlyblock}%",
+      "\t$TM_SELECTED_TEXT$0",
+      "\\end{reportonlyblock}%",
+      // "" // Ensure there is a new line at end
+    ]
+  },
+  "Conference only":{
+    "prefix": ["\\confonly"],
+    "body": [
+      "\\confonly{$TM_SELECTED_TEXT$1}$0"
+    ]
+  },
+  "Conference Only Multi-line":{
+    "prefix": ["\\confonly%"],
+    "body": [
+      "\\confonly{%",
+      "\t$TM_SELECTED_TEXT$0",
+      "}% End of \\confonly",
+      // "" // Ensure there is a new line at end
+    ]
+  },
+  "Conference Only Block":{
+    "prefix": ["\\confonlyblock"],
+    "body": [
+      "\\begin{confonlyblock}%",
+      "\t$TM_SELECTED_TEXT$0",
+      "\\end{confonlyblock}%y",
+      // "" // Ensure there is a new line at end
+    ]
+  },
+  "Working Note":{
+    "prefix": ["\\workingnote"],
+    "body": [
+      "\\workingnote{$TM_SELECTED_TEXT$0}"
+    ]
+  },
+  "Working Note Multiline":{
+    "prefix": ["\\workingnote%"],
+    "body": [
+      "\\workingnote{%",
+      "\t$TM_SELECTED_TEXT$0",
+      "}% End of \\workingnote",
+      // "" // Ensure there is a new line at end
+    ]
+  },
+  "Working Note Block":{
+    "prefix": ["\\workingnoteblock"],
+    "body": [
+      "\\begin{workingnoteblock}%",
+      "\t$TM_SELECTED_TEXT$0",
+      "\\end{workingnoteblock}%",
+      // "" // Ensure there is a new line at end
+    ]
+  },
+  // MATH SYMBOLS //
+  "sin(theta)": {
+    "prefix": "\\st",
+    "body": ["\\sin\\theta"]
+  },
+  "cos(theta)": {
+    "prefix": "\\ct",
+    "body": ["\\cos\\theta"]
+  }
+  ,
+  "sin^2(theta)": {
+    "prefix": "\\s2t",
+    "body": ["\\sin^2\\theta"]
+  },
+  "cos^2(theta)": {
+    "prefix": "\\c2t",
+    "body": ["\\cos^2\\theta"]
+  },	
+  // "Memory" symbols.
+  "Memory Sum (Memorize)":{
+    "prefix": ["\\memsum*"],
+    "body": [
+      "\\memsum*[$1=${2:0}][${3:\\infty}] $0"
+    ]
+  },
+  "Memory Product (Memorize)":{
+    "prefix": ["\\memprod*"],
+    "body": [
+      "\\memprod*[$1=${2:0}][${3:\\infty}] $0"
+    ]
+  },
+  "Memory Limit (Memorize)":{
+    "prefix": ["\\memlim*"],
+    "body": [
+      "\\memlim*[$1\\to $2] $0"
+    ]
+  },
+  "Memory Limit (Recall)":{
+    "prefix": ["\\memlim"],
+    "body": [
+      "\\memlim $0"
+    ]
+  },
+  "Memory Integer (Memorize)":{
+    "prefix": ["\\memint*"],
+    "body": [
+      "\\memint*[${1:lower limit}][${2:upper limit}][d${3:x}]{$TM_SELECTED_TEXT$4} $0"
+    ]
+  },
+  "Memory Integer (Recall)":{
+    "prefix": ["\\memint"],
+    "body": [
+      "\\memint{$TM_SELECTED_TEXT$1} $0"
+    ]
+  },
+  "Memory Sequence (Memorize)":{
+    "prefix": ["\\memseq*"],
+    "body": [
+      "\\memseq*[${1:j}=${2:0}][${3:\\infty}]{$TM_SELECTED_TEXT$4}$0"
+    ]
+  },
+  "Memory Sequence (Recall)":{
+    "prefix": ["\\memseq"],
+    "body": [
+      "\\memseq{$TM_SELECTED_TEXT$1}$0"
+    ]
+  },
+  "Memory Supremum (Memorize)":{
+    "prefix": ["\\memsup*"],
+    "body": [
+      "\\memsup*[$1] $0"
+    ]
+  },
+  "Memory Supremum (Recall)":{
+    "prefix": ["\\memsup"],
+    "body": [
+      "\\memsup $0"
+    ]
+  },
+  "Memory Infimum (Memorize)":{
+    "prefix": ["\\meminf*"],
+    "body": [
+      "\\meminf*[$1] $0"
+    ]
+  },
+  "Memory Infimum (Recall)":{
+    "prefix": ["\\meminf"],
+    "body": [
+      "\\meminf $0"
+    ]
+  },
+  "Auto cases":{
+    "prefix": ["autocases", "\\begin{autocases}"],
+    "body": [
+      "\\begin{autocases}",
+        "\t$TM_SELECTED_TEXT$1 if $2 \\\\\\\\",
+        "\t$3 if $4",
+      "\\end{autocases}"
+    ]
+  },
+  "Cases":{
+    "prefix": ["cases", "\\begin{cases}"],
+    "body": [
+      "\\begin{cases}",
+        "\t$TM_SELECTED_TEXT$1 &\\textup{if } $2 \\\\\\\\",
+        "\t$3 &\\textup{if } $4",
+      "\\end{cases}"
+    ]
+  },
+  // "End-Begin":{
+  // 	"prefix": ["\\endbegin"],
+  // 	"body": [
+  // 		"\\end{$1}",
+  // 		"",
+  // 		"\\begin{$1}$TM_SELECTED_TEXT$0",
+  // 	]
+  // },
+  "Inline To-do":{
+    "prefix": ["\\todoinline", "\\todo[inline]"],
+    "body": [
+      "\\todo[inline]{%", 
+      "\tTo-do: $TM_SELECTED_TEXT$0",
+      "}"
+    ]
+  },
+  "Comment from Ricardo":{
+    "prefix": ["\\commentFromRicardo"],
+    "body": [
+      "\\todo[inline]{%", 
+      "\t\\textbf{Comment from Ricardo ($\\sim$$CURRENT_MONTH_NAME $CURRENT_DATE, $CURRENT_YEAR):} $TM_SELECTED_TEXT$0",
+      "}"
+    ]
+  },
+  "Comment from X":{
+    "prefix": ["\\commentFromX"],
+    "body": [
+      "\\todo[inline]{%", 
+      "\t\\textbf{Comment from $1 ($\\sim$$CURRENT_MONTH_NAME $CURRENT_DATE, $CURRENT_YEAR):} $TM_SELECTED_TEXT$0",
+      "}"
+    ]
+  },
+  // "Comment from Murat":{ // Temporary Snippet for copying comments.
+  //   "prefix": ["\\commentFromMurat"],
+  //   "body": [
+  //     "\\todo[inline]{%", 
+  //     "\t\\textbf{Comment from Murat (11/13/24):} $TM_SELECTED_TEXT$0",
+  //     "}"
+  //   ]
+  // },
+  //|################|
+  //| HYBRID SYSTEMS |
+  //|################|
+  "Hybrid system (text)":{
+    "prefix": ["HS"],
+    "body": [
+      "hybrid system"
+    ]
+  },
+  "Hybrid system":{
+    "prefix": ["\\hybridsystem"],
+    "body": [
+      "\\system{",
+      "\t\\dot{${1:x}}\\phantom{^{+}} &= f(${1:x}) & C &:= \\setdef{${1:x} \\in \\realsn \\suchthat $2} \\\\\\\\",
+      "\t {${1:x}}^{+} &= g(${1:x}) & D &:= \\setdef{${1:x} \\in \\realsn \\suchthat $3}",
+      "}"
+    ]
+  },
+  "Hybrid System Data":{
+    "prefix": ["\\CfDg"],
+    "body": [
+      "(C, f, D, g)"
+    ]
+  },
+  "Cyber-physical":{
+    "prefix": ["CP", "cyber-physical"],
+    "body": [
+      "cyber-physical"
+    ]
+  },
+  "Cyber-physical system":{
+    "prefix": ["CPS", "cyber-physical system"],
+    "body": [
+      "cyber-physical system"
+    ]
+  },
+  // Common Mathematical Expressions
+  "Matrix (inline)":{
+    "prefix": ["\\mat"],
+    "body": [
+      "\\mat{$TM_SELECTED_TEXT$1}$0",
+    ]
+  },
+  "Matrix (multiline)":{
+    "prefix": ["\\matml"],
+    "body": [
+      "\\mat{",
+      "\t$TM_SELECTED_TEXT$1",
+      "}$0",
+    ]
+  },
+  "Set-builder notation":{
+    "prefix": ["\\setbuild"],
+    "body": [
+      "\\setdef{$TM_SELECTED_TEXT${1:x} \\suchthat $2} $0"
+    ]
+  },
+  "Set definition":{
+    "prefix": ["\\setdef"],
+    "body": [
+      "\\setdef{$TM_SELECTED_TEXT$1} $0"
+    ]
+  },
+  "In set":{
+    "prefix": ["\\in{}"],
+    "body": [
+      "\\in \\{${1}\\\\}$0"
+    ]
+  },
+  "Set of Natural Numbers":{
+    "prefix": ["\\N"],
+    "body": [
+      "\\naturals"
+    ]
+  },
+  "Set of Real Numbers":{
+    "prefix": ["\\R"],
+    "body": [
+      "\\reals"
+    ]
+  },
+  "Set of Complex Numbers":{
+    "prefix": ["\\C"],
+    "body": [
+      "\\complexes"
+    ]
+  },
+  "Line break":{
+    "prefix": ["\\\\ "],
+    "body": [
+      "\\\\\\\\",
+      "$0"
+    ]
+  },
+  "Swap inequality":{
+    // Link: https://regex101.com/r/SWe88H/latest
+    "prefix": "\\swap",
+    "body": "${TM_SELECTED_TEXT/^[ ]*(.*?)[ ]*(&?)(?==|<|>|\\\\leq|\\\\geq)(=)?(<)?(>)?(\\\\leq)?(\\\\geq)?[ ]*(.*?)[ ]*$/$8 $2$3${4:+>}${5:+<}${6:+\\\\geq}${7:+\\\\leq} $1/}"
+  },
+  // ╭───────────────────────────────────────────────────╮
+  // │ ╭───────────────────────────────────────────────╮ │
+  // │ │             Rewriting Expressions             │ │
+  // │ ╰───────────────────────────────────────────────╯ │
+  // ╰───────────────────────────────────────────────────╯
+  // ╭──────────────────────────────────╮
+  // │             Matrices             │
+  // ╰──────────────────────────────────╯
+  "Transpose column vector": {
+    "prefix": ["\\transposeColumn"],
+    "body": [
+      "${TM_SELECTED_TEXT/(?:(&)|(\\\\\\\\)(?=\\s))/${1:+\\\\\\\\}${2:+&}/g}"
+    ],
+    "description": "Tranpose the contents of a matrix by replacing all \"&\" with \"\\\\\" and vice versa."
+  },
+  // ╭──────────────────────────────────────────────────────────────────╮
+  // │ ╭──────────────────────────────────────────────────────────────╮ │
+  // │ │             Defining Macros And Writing Packages             │ │
+  // │ ╰──────────────────────────────────────────────────────────────╯ │
+  // ╰──────────────────────────────────────────────────────────────────╯
+  "New Command":{
+    "prefix": ["\\newcommand"],
+    "body": [
+      "\\newcommand{\\\\${1:cmd}}{$TM_SELECTED_TEXT$2}$0"
+    ]
+  },
+  "New Environment with environ package": {
+    "prefix": "\\NewEnvrion",
+    "body": [
+      "\\NewEnviron{${1:env_name}}[${2:n_args}][]{%",
+        "\t${3:before body}",
+        "\t\t\\BODY",
+        "\t${4:after body}",
+      "}"
+    ]
+  },
+  "Group (Variable Scope)":{
+    "prefix": ["\\begingroup", "\\group"],
+    "body": [
+      "\\begingroup",
+      "$TM_SELECTED_TEXT$0",
+      "\\endgroup"
+    ]
+  },
+  "Make @ a letter":{
+    "prefix": ["\\makeat", "\\makeatletter"],
+    "body": [
+      "\\makeatletter",
+      "\t$TM_SELECTED_TEXT$0", 
+      "\\makeatother"
+    ]
+  },
+  "csname": {
+    "prefix": ["\\csname"],
+    "body": [
+      "\\csname ${1:$TM_SELECTED_TEXT}\\endcsname"
+    ],
+    "description": ""
+  },
+  // ╭─────────────────────────────────────────────╮
+  // │             Warnings and Errors             │
+  // ╰─────────────────────────────────────────────╯
+  "Package Error": {
+    "prefix": ["\\PackageError"],
+    "body": [
+      "\\PackageError{${1:package_name}}{${2:message}}{${3:help_text}}%"
+    ],
+    "description": "Within the error-text: \\protect can be used to stop a command from expanding; \\MessageBreak causes a line-break; and \\space prints a space. Also, these should not end with a full stop as one is automatically added."
+  },
+  "Class Error": {
+    "prefix": ["\\ClassError"],
+    "body": [
+      "\\ClassWarning{${1:class_name}}{${2:message}}{${3:help_text}%"
+    ],
+    "description": "Within the error-text: \\protect can be used to stop a command from expanding; \\MessageBreak causes a line-break; and \\space prints a space. Also, these should not end with a full stop as one is automatically added."
+  },
+  "Package Warning": {
+    "prefix": ["\\PackageWarning"],
+    "body": [
+      "\\PackageWarning{${1:package_name}}{${2:message}}%"
+    ],
+    "description": "Within the ⟨warning-text⟩ and ⟨info-text⟩: \\protect can be used to stop a command from expanding; \\MessageBreak causes a line-break; and \\space prints a space. Also, these should not end with a full stop as one is automatically added."
+  },
+  "Class Warning": {
+    "prefix": ["\\ClassWarning"],
+    "body": [
+      "\\ClassWarning{${1:class_name}}{${2:message}}%"
+    ],
+    "description": "Within the ⟨warning-text⟩ and ⟨info-text⟩: \\protect can be used to stop a command from expanding; \\MessageBreak causes a line-break; and \\space prints a space. Also, these should not end with a full stop as one is automatically added."
+  },
+  // ======== LATEX BOOLEANS and CONDITIONALS ============
+  "If Boolean":{
+    "prefix": ["\\ifbool"],
+    "body": [
+      "\\ifbool{${1:bool name}}%",
+      "{% If ${1:bool name} is true...",
+        "\t$TM_SELECTED_TEXT",
+      "}{% If ${1:bool name} is false",
+      "}%"
+    ]
+  },
+  "Switch block":{
+    "prefix": ["switch", "\\begin{switch}"],
+    "body": [
+      "\\begin{switch}{${1:value}}%",
+        "\t\\case{${2:condition}}{$4}%",
+        "\t\\case{${3:condition}}{$5}%",
+        "\t\\otherwise{$6}%",
+      "\\end{switch}%"
+    ], 
+    "description": "Insert a switch block from Paul Wintz's 'switch' package."
+  },
+  "If Math Mode":{
+    "prefix": ["\\ifmmode", "\\ifmathmode", "\\ifequation"],
+    "body": [
+      "\\ifmmode% If in math mode",
+      "\t$TM_SELECTED_TEXT${1:math mode code}",
+      "\\else% If in text mode",
+      "\t${2:text mode code}",
+      "\\fi% End of if in math mode"
+    ]	
+  },
+  "If class loaded": {
+    "prefix": ["\\@ifclassloaded", "\\ifclassloaded"],
+    "body": [
+      "\\@ifclassloaded{${1:document class}}{% If using $1 class...", 
+      "\t$TM_SELECTED_TEXT$0", 
+      "}{}%",
+      ""
+    ]
+  },
+  "If package loaded": {
+    "prefix": ["\\@ifpackageloaded", "\\ifpackageloaded"],
+    "body": [
+      "\\@ifpackageloaded{${1:package}}{% If $1 package...", 
+      "\t$TM_SELECTED_TEXT$0", 
+      "}{}%",
+      ""
+    ]
+  },
+  "If Command Sequence is Defined": {
+    "prefix": ["\\ifcsdefined"],
+    "body": [
+      "\\ifcsdef{${1:command_sequence_name}}{% If \\\\${1:command_sequence_name} is defined...",
+      "\t$2", 
+      "}{% Else, if \\\\${1:command_sequence_name} is not defined...",
+      "\t$3",
+      "}%",
+      "$0"
+    ],
+    "description": "Conditional based on whether a command sequence is defined. Do not add a backslash in front of the name, e.g., use \"\\ifcsdef{cs_name}\" not \"\\ifcsdef{\\cs_name}\"."
+  },
+  "If file exists": {
+    "prefix": ["\\IfFileExists"],
+    "body": [
+      "\\IfFileExists{${1:filename}}{%", 
+      "\t${2:true-branch}", 
+      "}{%", 
+      "\t${3:false-branch}",
+      "}"
+    ],
+    "description": ""
+  },
+  // ╭─────────────────────────────────────────────────────╮
+  // │             ifthen package for booleans             │
+  // ╰─────────────────────────────────────────────────────╯
+  "\\newboolean": {
+    "prefix": ["\\newboolean"],
+    "body": [
+      "\\newboolean{${1:name}}",
+      "\\setboolean{${1:name}}{${2|true,false|}}"
+    ],
+    "description": "Create new boolean variable using the ifthen package."
+  },
+  "ifthenelse": {
+    "prefix": ["\\ifthenelse"],
+    "body": [
+      "% The ifthen test can use \\and, \\or, \\not, <, =, >, \\isodd, \\isundefined{\\cmd}, \\equal{string1}{string2}, and \\boolean{boolean_name}.",
+      "\\ifthenelse{${1:test}}%",
+      "{% If $1...",
+      "\t",
+      "}{% Else...",
+      "\t", 
+      "}",
+      ""
+    ],
+    "description": ""
+  },
+  // "ifthen test selection":{
+  //   "prefix": "ifthentest",
+  //   "body": "$\\and, \\or, \\not, <, =, >, \\isodd, \\isundefined{\\cmd}, \\equal{string1}{string2}, \\boolean{boolean_name}"
+  // },
+  
+  // ╭────────────────────────────────────────────────╮
+  // │             Key-value Pair Options             │
+  // ╰────────────────────────────────────────────────╯
+  "Key-value options": {
+    "prefix": ["\\keyvalueoptions", "\\kvoptions"],
+    "body": [
+      "% !! Recommended: Use \\keys_define from the LaTeX3 programming layer instead.",
+      "% Uses the kvoptions package for processing key-value options.",
+      "% Declare the package option family \"${1:kvfamily}\"",
+      "\\SetupKeyvalOptions{",
+        "\tfamily=${1:kvfamily},",
+        "\tprefix=${1:kvfamily}@",
+      "}",
+      "% Example key-value declarations",
+      "\\DeclareBoolOption[default]{optionName}",
+      "\\DeclareStringOption[default]{optionName}",
+      "",
+      "% Process package options",
+      "\\ProcessKeyvalOptions{${1:kvfamily}}",
+    ],
+    "description": "Consider using l3keys2e instead."
+  },
+  "kvoptions \\DeclareBoolOption": {
+    "prefix": ["\\DeclareBoolOption"],
+    "body": [
+      "\\DeclareBoolOption[${2:default}]{${1:optionName}}"
+    ],
+    "description": ""
+  },
+  // ╭────────────────────────────────────────────────╮
+  // │ ╭────────────────────────────────────────────╮ │
+  // │ │             Columns and Tables             │ │
+  // │ ╰────────────────────────────────────────────╯ │
+  // ╰────────────────────────────────────────────────╯
+  "Inline Table":{
+    "prefix": ["table", "tabular"],
+    "body": [
+      "\\begin{center}",
+          "\t\\begin{tabular}{$1}",
+              "\t\t$TM_SELECTED_TEXT$0",
+          "\t\\end{tabular}",
+      "\\end{center}"
+    ]
+  },
+  "Two Columns":{
+    "prefix": ["\\columns (2)","\\twocolumns","\\2columns"],
+    "body": [
+      "\\begin{columns}",
+        "\t\\begin{column}[T]{0.48\\textwidth}",
+          "\t\t$TM_SELECTED_TEXT$1",
+        "\t\\end{column}",
+        "\t\\hfill",
+        "\t\\begin{column}[T]{0.48\\textwidth}",
+          "\t\t$2",
+        "\t\\end{column}",
+      "\\end{columns}",
+      "$0"
+    ]
+  },
+  "Three Columns":{
+    "prefix": ["\\columns (3)", "\\threecolumns", "\\3columns"],
+    "body": [
+      "\\begin{columns}",
+        "\t\\begin{column}[T]{0.31\\textwidth}",
+          "\t\t$TM_SELECTED_TEXT$1",
+        "\t\\end{column}",
+        "\t\\hfill",
+        "\t\\begin{column}[T]{0.31\\textwidth}",
+          "\t\t$2",
+        "\t\\end{column}",
+        "\t\\hfill",
+        "\t\\begin{column}[T]{0.31\\textwidth}",
+          "\t\t$3",
+        "\t\\end{column}",
+      "\\end{columns}",
+      "$0"
+    ]
+  },
+  "Four Columns":{
+    "prefix": ["\\columns (4)", "\\fourcolumns", "\\4columns"],
+    "body": [
+      "\\begin{columns}",
+        "\t\\begin{column}[T]{0.23\\textwidth}",
+          "\t\t$TM_SELECTED_TEXT$1",
+        "\t\\end{column}",
+        "\t\\hfill",
+        "\t\\begin{column}[T]{0.23\\textwidth}",
+          "\t\t$2",
+        "\t\\end{column}",
+        "\t\\hfill",
+        "\t\\begin{column}[T]{0.23\\textwidth}",
+          "\t\t$3",
+        "\t\\end{column}",
+        "\t\\hfill",
+        "\t\\begin{column}[T]{0.23\\textwidth}",
+          "\t\t$4",
+        "\t\\end{column}",
+      "\\end{columns}",
+      "$0"
+    ]
+  },
+  "Full-width Minipage (no page breaks)":{
+    "prefix": ["\\minipage", "\\nopagebreak"],
+    "body": [
+      "\\begin{minipage}{\\linewidth}%",
+        "\t\\centering",
+        "\t$TM_SELECTED_TEXT$0",
+      "\\end{minipage}%"
+    ]
+  },
+  // Insert columns
+  "Two Columns (Minipages)":{
+    "prefix": ["\\minipage columns (2)","\\twominipages"],
+    "body": [
+      "\\begin{minipage}{0.49\\linewidth}%",
+        "\t\\centering",
+        "\t$TM_SELECTED_TEXT$1",
+      "\\end{minipage}%",
+      "\\hfill",
+      "\\begin{minipage}{0.49\\linewidth}%",
+          "\t\\centering",
+          "\t$2",
+      "\\end{minipage}%",
+      "$0"
+    ]
+  },
+  "Two Columns (Table)":{
+    "prefix": ["\\table columns (2)","\\twocolumntable"],
+    "body": [
+      "\\begin{center}",
+          "\t\\begin{tabular}{p{0.47\\linewidth}p{0.47\\linewidth}}",
+            "\t\t$TM_SELECTED_TEXT$1 & $0",
+          "\t\\end{tabular}",
+      "\\end{center}"
+    ]
+  },
+  "Three Columns (Table)":{
+    "prefix": ["\\table columns (3)","\\threecolumntable"],
+    "body": [
+      "\\begin{center}",
+          "\t\\begin{tabular}{p{0.31\\linewidth}p{0.31\\linewidth}p{0.31\\linewidth}}",
+            "\t\t$TM_SELECTED_TEXT$1 & $2 & $0",
+          "\t\\end{tabular}",
+      "\\end{center}"
+    ]
+  },
+  "Four Columns (Table)":{
+    "prefix": ["\\table columns (4)","\\fourcolumntable"],
+    "body": [
+      "\\begin{center}",
+        "\t\\begin{tabular}{p{0.23\\linewidth}p{0.23\\linewidth}p{0.23\\linewidth}p{0.23\\linewidth}}",
+            "\t\t$TM_SELECTED_TEXT$1 & $2 & $3 & $0",
+          "\t\\end{tabular}",
+      "\\end{center}"
+    ]
+  },
+  // ╭──────────────────────────────────────────────────╮
+  // │ ╭──────────────────────────────────────────────╮ │
+  // │ │             Beamer Presentations             │ │
+  // │ ╰──────────────────────────────────────────────╯ │
+  // ╰──────────────────────────────────────────────────╯
+  "Beamer Frame":{
+    "prefix": ["\\frame", "\\begin{frame}"],
+    "body": [
+      "\\begin{frame}{${1:title}}",
+      "\t$TM_SELECTED_TEXT$0",
+      "\\end{frame}"
+    ]
+  },
+  "Beamer Frame (Top aligned)":{
+    "prefix": ["\\frametop", "\\begin{frame}[t]", "frame top"],
+    "body": [
+      "\\begin{frame}[t]{${1:title}}",
+      "\t$TM_SELECTED_TEXT$0",
+      "\\end{frame}"
+    ]
+  },
+  "Structure":{
+    "prefix": ["\\structure"],
+    "body": [
+      "\\structure{$TM_SELECTED_TEXT$1}$0"
+    ]
+  },
+  "Structure (Math)":{
+    // Requires "\newcommand{\mstructure}[1]{{\color{structure} #1}}"
+    "prefix": ["\\mstructure", "\\structure (math)"],
+    "body": [
+      "\\mstructure{$TM_SELECTED_TEXT$1}$0"
+    ]
+  },
+  "Only Exist on Slide":{
+    "prefix": "\\only",
+    "body": "\\only<${1:overlay specification}>{$TM_SELECTED_TEXT$0}"
+  },
+  "Only Exist on Slide (Block)":{
+    "prefix": "\\onlyblock",
+    "body": [
+      "\\only<${1:overlay specification}>{%",
+        "\t$TM_SELECTED_TEXT$0", 
+      "}% End only block"
+    ]
+  },
+  "Only Shown on Slide":{
+    "prefix": "\\onslide",
+    "body": "\\onslide<${1:overlay specification}>{$TM_SELECTED_TEXT$0}"
+  },
+  "Only Shown on Slide (Block)":{
+    "prefix": "\\onslideblock",
+    "body": [
+      "\\onslide<${1:overlay specification}>{%",
+        "\t$TM_SELECTED_TEXT$0", 
+      "}% End only block"
+    ]
+  },
+  "Pause After Itemize or <+->":{
+    "prefix": ["\\pauseafter<+->", "\\pauseAfterItemize"],
+    "body": [
+      "\\pause[\\thebeamerpauses]",
+      "$0"
+    ]
+  },
+
+  // ╭────────────────────────────────────────────────────────────────────────╮
+  // │ ╭────────────────────────────────────────────────────────────────────╮ │
+  // │ │             xparse Package for Macros and Environments             │ │
+  // │ ╰────────────────────────────────────────────────────────────────────╯ │
+  // ╰────────────────────────────────────────────────────────────────────────╯
+  "xparse: If optional argument is not given": {
+    "prefix": ["\\IfNoOptionalArgument", "\\IfNoValueT"],
+    "body": [
+      "\\IfNoValueT {#${1|1,2,3,4,5|}} {${2:code when parameter is not given}}",
+    ],
+    "description": "Check if ⟨argument⟩ (#1, #2, etc.) is the special -NoValue- marker inside a command defined using xparse, e.g., with \\NewDocumentCommand."
+  },
+  "xparse: If/else optional argument is given": {
+    "prefix": ["\\IfNoOptionalArgument", "\\IfNoValueTF"],
+    "body": [
+      "\\IfNoValueTF {#${1|1,2,3,4,5|}} {${2:code when parameter is not given}} {${2:code when parameter is given}}",
+    ],
+    "description": "Check if ⟨argument⟩ (#1, #2, etc.) is the special -NoValue- marker inside a command defined using xparse, e.g., with \\NewDocumentCommand."
+  },
+  "xparse: If optional argument is given": {
+    "prefix": ["\\IfOptionalArgument", "\\IfNoValueF", "\\IfValueF"],
+    "body": [
+      "\\IfNoValueF {#${1|1,2,3,4,5|}} {${2:code when parameter is given}}"
+    ],
+    "description": "Check if ⟨argument⟩ (#1, #2, etc.) is the special -NoValue- marker inside a command defined using xparse, e.g., with \\NewDocumentCommand."
+  },
+  // ╭─────────────────────────────────────╮
+  // │ ╭─────────────────────────────────╮ │
+  // │ │             Testing             │ │
+  // │ ╰─────────────────────────────────╯ │
+  // ╰─────────────────────────────────────╯
+  "File Contents": {
+    "prefix": ["\\filecontents"],
+    "body": [
+      "\\begin{filecontents}[overwrite]{${1:filename}}",
+      "\t$TM_SELECTED_TEXT$0",
+      "\\end{filecontents}"
+    ],
+    "description": "Environment for automatically generating the contents of a file witht the given name."
+  },
+  // ╭───────────────────────────────────────────────╮
+  // │ ╭───────────────────────────────────────────╮ │
+  // │ │              New And Unsorted             │ │
+  // │ ╰───────────────────────────────────────────╯ │
+  // ╰───────────────────────────────────────────────╯
+  "Tuple": {
+    "prefix": "\\tuple",
+    "body": [
+      "\\tuple{$TM_SELECTED_TEXT$1}{$2}$0"
+    ]
+  },
+  "Math parentheses": {
+    "prefix": ["\\mparen", "("],
+    "body": [
+      "\\mparen{$TM_SELECTED_TEXT$1}$0"
+    ]
+  }, 
+  "Raisebox": {
+    "prefix": "\\raisebox",
+    "body": "\\raisebox{${1:raise distance}}{$TM_SELECTED_TEXT$2}"
+  }, 
+  "Space reduction opportunity": {
+    "prefix": ["space save", "space reduction"], 
+    "body": "% !! Space saving opportunity"
+  },
+  "Spaced Paragraphs instead of indented": {
+    "prefix": ["\\spacedParagraphs"],
+    "body": [
+      "\\setlength{\\parindent}{0pt}    % No indentation",
+      "\\setlength{\\parskip}{1em}      % Add vertical space between paragraphs"
+    ],
+    "description": "Put this in the preamble to change paragraphs from being indicated with indentation to being indicated with space between lines."
+  },
+  // "transpose array": {
+	// 	"prefix": "transpose", 
+	// 	"body": "${TM_SELECTED_TEXT/.*?(\\s*\\d+\\s*)?(?:&(\\s*\\d+\\s*))?(?:&(\\s*\\d+\\s*))?\\\\(\\s*\\d+\\s*)?(?:&(\\s*\\d+\\s*))?(?:&(\\s*\\d+\\s*))?.*/${1} & ${3} & ${5} \\\\ $2 & $4 & $6 /}"
+	// }
+  "Unmacro": {
+    "prefix": "\\unmacro",
+    "body": [
+      "${TM_SELECTED_TEXT/(\\s*)\\\\\\w+\\{([^\\}]+)\\}(\\s*)/$1$2$3/}"
+    ]
+  },
+  
+}

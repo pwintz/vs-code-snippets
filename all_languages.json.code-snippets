@@ -15,33 +15,58 @@
 	// 	],
 	// 	"description": "Log output to console"
 	// }
-  // Indexing
-    "Cursor index (starts at 0)":{
-      "prefix": ["\\cursorindex", "\\ndx"],
-      "body" : ["$CURSOR_INDEX"]
-    },
-    "Cursor number (starts at 1)":{
-      "prefix": ["\\cursornum", "\\num"],
-      "body" : ["$CURSOR_NUMBER"]
-    },
-    "Cursor uppercase Alphabet (A, B, C, ..., I)":{
-      "prefix": ["\\cursorAlph", "\\Alph"],
-      "body" : ["${CURSOR_NUMBER/(^1$)?(^2$)?(^3$)?(^4$)?(^5$)?(^6$)?(^7$)?(^8$)?(^9$)?(^10$)?(^11$)?(^12$)?(^13$)?(^14$)?(^15$)?(^16$)?(^17$)?(^18$)?(^19$)?(^20$)?(^21$)?(^22$)?(^23$)?(^24$)?(^25$)?(^26$)?/${1:+A}${2:+B}${3:+C}${4:+D}${5:+E}${6:+F}${7:+G}${8:+H}${9:+I}${10:+J}${11:+K}${12:+L}${13:+M}${14:+N}${15:+O}${16:+P}${17:+Q}${18:+R}${19:+S}${20:+T}${21:+U}${22:+V}${23:+W}${24:+X}${25:+Y}${26:+Z}/}"]
-    },
-    "Cursor lowercase alphabet (a, b, c, ..., i)":{
-      "prefix": ["\\cursoralph", "\\alph"],
-      "body" : ["${CURSOR_NUMBER/(^1$)?(^2$)?(^3$)?(^4$)?(^5$)?(^6$)?(^7$)?(^8$)?(^9$)?(^10$)?(^11$)?(^12$)?(^13$)?(^14$)?(^15$)?(^16$)?(^17$)?(^18$)?(^19$)?(^20$)?(^21$)?(^22$)?(^23$)?(^24$)?(^25$)?(^26$)?/${1:+a}${2:+b}${3:+c}${4:+d}${5:+e}${6:+f}${7:+g}${8:+h}${9:+i}${10:+j}${11:+k}${12:+l}${13:+m}${14:+n}${15:+o}${16:+p}${17:+q}${18:+r}${19:+s}${20:+t}${21:+u}${22:+v}${23:+w}${24:+x}${25:+y}${26:+z}/}"]
-    },
-    "Cursor lowercase Roman (i, ii, iii, ..., xx)":{
-      "prefix": ["\\roman", "\\cursorroman"],
-      "body" : ["${CURSOR_NUMBER/(^1$)?(^2$)?(^3$)?(^4$)?(^5$)?(^6$)?(^7$)?(^8$)?(^9$)?(^10$)?(^11$)?(^12$)?(^13$)?(^14$)?(^15$)?(^16$)?(^17$)?(^18$)?(^19$)?(^20$)?/${1:+i}${2:+ii}${3:+iii}${4:+iv}${5:+v}${6:+vi}${7:+vii}${8:+viii}${9:+ix}${10:+x}${11:+xi}${12:+xii}${13:+xiii}${14:+xiv}${15:+xv}${16:+xvi}${17:+xvii}${18:+xviii}${19:+xix}${20:+xx}/}"]
-    },
-    "Cursor uppercase Roman (I, II, III, ..., XX)":{
-      "prefix": ["\\Roman", "\\cursorRoman"],
-      "body" : ["${CURSOR_NUMBER/(^1$)?(^2$)?(^3$)?(^4$)?(^5$)?(^6$)?(^7$)?(^8$)?(^9$)?(^10$)?(^11$)?(^12$)?(^13$)?(^14$)?(^15$)?(^16$)?(^17$)?(^18$)?(^19$)?(^20$)?/${1:+I}${2:+II}${3:+III}${4:+IV}${5:+V}${6:+VI}${7:+VII}${8:+VIII}${9:+IX}${10:+X}${11:+XI}${12:+XII}${13:+XIII}${14:+XIV}${15:+XV}${16:+XVI}${17:+XVII}${18:+XVIII}${19:+XIX}${20:+XX}/}"]
-    },
-  // Duplication
-  "2x":{
+  // ╭─────────────────────────────────────────────────────────────╮
+  // │ ╭─────────────────────────────────────────────────────────╮ │
+  // │ │             Multi-cursor Insertion Snippets             │ │
+  // │ ╰─────────────────────────────────────────────────────────╯ │
+  // ╰─────────────────────────────────────────────────────────────╯
+  // Updates:
+  //  6/10/2025: Added "$0" so that snippet immediately finishes, instead of waiting for TAB to be typed.
+  "Cursor index (starts at 0)":{
+    "prefix": ["\\cursorindex", "\\ndx"],
+    "body" : ["$CURSOR_INDEX$0"]
+  },
+  "Cursor number (starts at 1)":{
+    "prefix": ["\\cursornum", "\\num"],
+    "body" : ["$CURSOR_NUMBER$0"]
+  },
+  "Cursor uppercase Alphabet (A, B, C, ..., I)":{
+    "prefix": ["\\cursorAlph", "\\Alph"],
+    "body" : ["${CURSOR_NUMBER/(^1$)?(^2$)?(^3$)?(^4$)?(^5$)?(^6$)?(^7$)?(^8$)?(^9$)?(^10$)?(^11$)?(^12$)?(^13$)?(^14$)?(^15$)?(^16$)?(^17$)?(^18$)?(^19$)?(^20$)?(^21$)?(^22$)?(^23$)?(^24$)?(^25$)?(^26$)?/${1:+A}${2:+B}${3:+C}${4:+D}${5:+E}${6:+F}${7:+G}${8:+H}${9:+I}${10:+J}${11:+K}${12:+L}${13:+M}${14:+N}${15:+O}${16:+P}${17:+Q}${18:+R}${19:+S}${20:+T}${21:+U}${22:+V}${23:+W}${24:+X}${25:+Y}${26:+Z}/}$0"]
+  },
+  "Cursor lowercase alphabet (a, b, c, ..., i)":{
+    "prefix": ["\\cursoralph", "\\alph"],
+    "body" : ["${CURSOR_NUMBER/(^1$)?(^2$)?(^3$)?(^4$)?(^5$)?(^6$)?(^7$)?(^8$)?(^9$)?(^10$)?(^11$)?(^12$)?(^13$)?(^14$)?(^15$)?(^16$)?(^17$)?(^18$)?(^19$)?(^20$)?(^21$)?(^22$)?(^23$)?(^24$)?(^25$)?(^26$)?/${1:+a}${2:+b}${3:+c}${4:+d}${5:+e}${6:+f}${7:+g}${8:+h}${9:+i}${10:+j}${11:+k}${12:+l}${13:+m}${14:+n}${15:+o}${16:+p}${17:+q}${18:+r}${19:+s}${20:+t}${21:+u}${22:+v}${23:+w}${24:+x}${25:+y}${26:+z}/}$0"]
+  },
+  "Cursor lowercase Roman (i, ii, iii, ..., xx)":{
+    "prefix": ["\\roman", "\\cursorroman"],
+    "body" : ["${CURSOR_NUMBER/(^1$)?(^2$)?(^3$)?(^4$)?(^5$)?(^6$)?(^7$)?(^8$)?(^9$)?(^10$)?(^11$)?(^12$)?(^13$)?(^14$)?(^15$)?(^16$)?(^17$)?(^18$)?(^19$)?(^20$)?/${1:+i}${2:+ii}${3:+iii}${4:+iv}${5:+v}${6:+vi}${7:+vii}${8:+viii}${9:+ix}${10:+x}${11:+xi}${12:+xii}${13:+xiii}${14:+xiv}${15:+xv}${16:+xvi}${17:+xvii}${18:+xviii}${19:+xix}${20:+xx}/}$0"]
+  },
+  "Cursor uppercase Roman (I, II, III, ..., XX)":{
+    "prefix": ["\\Roman", "\\cursorRoman"],
+    "body" : ["${CURSOR_NUMBER/(^1$)?(^2$)?(^3$)?(^4$)?(^5$)?(^6$)?(^7$)?(^8$)?(^9$)?(^10$)?(^11$)?(^12$)?(^13$)?(^14$)?(^15$)?(^16$)?(^17$)?(^18$)?(^19$)?(^20$)?/${1:+I}${2:+II}${3:+III}${4:+IV}${5:+V}${6:+VI}${7:+VII}${8:+VIII}${9:+IX}${10:+X}${11:+XI}${12:+XII}${13:+XIII}${14:+XIV}${15:+XV}${16:+XVI}${17:+XVII}${18:+XVIII}${19:+XIX}${20:+XX}/}$0"]
+  },
+  "Cursor number even":{
+    "prefix": ["\\even"],
+    "body" : ["${CURSOR_NUMBER/(^1$)?(^2$)?(^3$)?(^4$)?(^5$)?(^6$)?(^7$)?(^8$)?(^9$)?(^10$)?(^11$)?(^12$)?(^13$)?(^14$)?(^15$)?(^16$)??/${1:+2}${2:+4}${3:+6}${4:+8}${5:+10}${6:+12}${7:+14}${8:+16}/}$0"]
+  },
+  "Cursor number odd":{
+    "prefix": ["\\odd"],
+    "body" : ["${CURSOR_NUMBER/(^1$)?(^2$)?(^3$)?(^4$)?(^5$)?(^6$)?(^7$)?(^8$)?(^9$)?(^10$)?(^11$)?(^12$)?(^13$)?(^14$)?(^15$)?(^16$)??/${1:+1}${2:+3}${3:+5}${4:+7}${5:+9}${6:+11}${7:+13}${8:+15}/}$0"]
+  },
+  "Start/End": {
+    "prefix": ["\\Start/End"],
+    "body": [
+      "${CURSOR_NUMBER/(^1$)?(^2$)?(^3$)?/${1:+Start}${2:+End}${3:+[Too many cursors!]}/}$0"
+    ],
+    "description": ""
+  },
+  // ╭──────────────────────────────────────────────────╮
+  // │ ╭──────────────────────────────────────────────╮ │
+  // │ │             Duplication Snippets             │ │
+  // │ ╰──────────────────────────────────────────────╯ │
+  // ╰──────────────────────────────────────────────────╯
+  "":{
     "prefix": ["\\2x"],
     "body" : ["${1:$TM_SELECTED_TEXT}${4:, }$1$0"]
   },
@@ -65,11 +90,80 @@
     "prefix": ["\\7x"],
     "body" : ["${1:$TM_SELECTED_TEXT}${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1$0"]
   },
+  "8x":{
+    "prefix": ["\\8x"],
+    "body" : ["${1:$TM_SELECTED_TEXT}${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1$0"]
+  },
+  "9x":{
+    "prefix": ["\\9x"],
+    "body" : ["${1:$TM_SELECTED_TEXT}${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1$0"]
+  },
+  "10x":{
+    "prefix": ["\\10x"],
+    "body" : ["${1:$TM_SELECTED_TEXT}${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1$0"]
+  },
+  "11x":{
+    "prefix": ["\\11x"],
+    "body" : ["${1:$TM_SELECTED_TEXT}${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1$0"]
+  },
+  "12x":{
+    "prefix": ["\\12x"],
+    "body" : ["${1:$TM_SELECTED_TEXT}${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1${2:, }$1$0"]
+  },
   "nx":{
     "prefix": ["\\nx"],
     "body" : ["${1:$TM_SELECTED_TEXT}1${5:, }${1}2${5}${2|\\cdots,\\vdots,\\dots|}${5}${1}${6:n}$0"]
   },
-  // Repeat text with different suffixes for each item.
+  // ╭─────────────────────────────────────────────────────────────────────╮
+  // │             Comma separated with "and" before last item             │
+  // ╰─────────────────────────────────────────────────────────────────────╯
+  "2x list with \"and\"":{
+    "prefix": ["\\2xand"],
+    "body" : ["${1:$TM_SELECTED_TEXT} and $1$0"]
+  },
+  "3x comma separated list with \"and\"":{
+    "prefix": ["\\3xand"],
+    "body" : ["${1:$TM_SELECTED_TEXT}, $1, and $1$0"]
+  },
+  "4x comma separated list with \"and\"":{
+    "prefix": ["\\4xand"],
+    "body" : ["${1:$TM_SELECTED_TEXT}, $1, $1, and $1$0"]
+  },
+  "5x comma separated list with \"and\"":{
+    "prefix": ["\\5xand"],
+    "body" : ["${1:$TM_SELECTED_TEXT}, $1, $1, $1, and $1$0"]
+  },
+  "6x comma separated list with \"and\"":{
+    "prefix": ["\\6xand"],
+    "body" : ["${1:$TM_SELECTED_TEXT}, $1, $1, $1, $1, and $1$0"]
+  },
+  "7x comma separated list with \"and\"":{
+    "prefix": ["\\7xand"],
+    "body" : ["${1:$TM_SELECTED_TEXT}, $1, $1, $1, $1, $1, and $1$0"]
+  },
+  "8x comma separated list with \"and\"":{
+    "prefix": ["\\8xand"],
+    "body" : ["${1:$TM_SELECTED_TEXT}, $1, $1, $1, $1, $1, $1, and $1$0"]
+  },
+  "9x comma separated list with \"and\"":{
+    "prefix": ["\\9xand"],
+    "body" : ["${1:$TM_SELECTED_TEXT}, $1, $1, $1, $1, $1, $1, $1, and $1$0"]
+  },
+  "10x comma separated list with \"and\"":{
+    "prefix": ["\\10xand"],
+    "body" : ["${1:$TM_SELECTED_TEXT}, $1, $1, $1, $1, $1, $1, $1, $1 and $1$0"]
+  },
+  "11x comma separated list with \"and\"":{
+    "prefix": ["\\11xand"],
+    "body" : ["${1:$TM_SELECTED_TEXT}, $1, $1, $1, $1, $1, $1, $1, $1, $1, and $1$0"]
+  },
+  "12x comma separated list with \"and\"":{
+    "prefix": ["\\12xand"],
+    "body" : ["${1:$TM_SELECTED_TEXT}, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, and $1$0"]
+  },
+  // ╭────────────────────────────────────────────────────────────────────────────╮
+  // │             Repeat text with different suffixes for each item.             │
+  // ╰────────────────────────────────────────────────────────────────────────────╯
   "5x distinct suffixes":{
     "prefix": ["\\5x distinct suffixes"],
     "body" : ["${1:$TM_SELECTED_TEXT}${2:}${7:, }$1${3:}${7:, }$1${4:}${7:, }$1${5:}${7:, }$1${6:}$0"]
@@ -81,5 +175,287 @@
   "7x distinct suffixes":{
     "prefix": ["\\7x distinct suffixes"],
     "body" : ["${1:$TM_SELECTED_TEXT}$2 $1$3 $1$4 $1$5 $1$6 $1$7 $1$8$0"]
+  },
+  // ===================================
+  // ===== Section Header Snippets =====
+  // ===================================
+  //  Here are some unicode characters that might make for nice comment dividers.
+  //  «══════ Hello ═════»
+  //  ━━━━━━━
+  //  «──── Hello ─────»
+  //  ««««««««« Hello »»»»»»»»»
+  //  ⎶⎶⎶⎶⎶⎶⎶⎶⎶
+  //  ⎍⎍⎍⎍⎍⎍⎍⎍⎍⎍
+  //  ∭∭∭∭∭
+  //  ◆◆◆◆◆◆◆◆◆◆◆ Hello ◆◆◆◆◆◆◆◆◆◆◆◆
+  //  ◄◄◄◄◄◄◄◄◄◄◄ Hello ►►►►►►►►
+  //  ◄►◄►◄►◄►◄► Hello ◄►◄►◄►◄►◄►
+  //  ⋘───── Hello ─────⋙
+  //  ◢◤◥◣◢◤◥◣◢◤◥◣◢◤◥◣
+  //  ◥◣◢◤◥◣◢◤◥◣◢◤◥◣◢◤
+  //  〉═══ Hello ═══〈
+  //  ⌗⌗⌗⌗⌗⌗⌗⌗ 
+  "Section Comment Header": {
+    "prefix": "\\sectionComment", 
+    "body": [
+      "${LINE_COMMENT} ╭───────────────${1/./─/g}───────────────╮",
+      "${LINE_COMMENT} │ ╭─────────────${1/./─/g}─────────────╮ │",
+      "${LINE_COMMENT} │ │             ${1:$TM_SELECTED_TEXT}             │ │",
+      "${LINE_COMMENT} │ ╰─────────────${1/./─/g}─────────────╯ │",
+      "${LINE_COMMENT} ╰───────────────${1/./─/g}───────────────╯",
+      "$0"
+    ]
+  },
+  "Subsection Comment Header": {
+    "prefix": ["\\subsectionComment"], 
+    "body": [
+      "${LINE_COMMENT} ╭─────────────${1/./─/g}─────────────╮",
+      "${LINE_COMMENT} │             ${1:$TM_SELECTED_TEXT}             │",
+      "${LINE_COMMENT} ╰─────────────${1/./─/g}─────────────╯",
+      "$0"
+    ]
+  },
+  "subsubsection Comment Header": {
+    "prefix": ["\\subsubsectionComment"], 
+    "body": [
+      "${LINE_COMMENT} ⋘────────── ${1:$TM_SELECTED_TEXT} ──────────⋙",
+      ""
+    ]
+  }, 
+  // ╭─────────────────────────────────────────────────╮
+  // │ ╭─────────────────────────────────────────────╮ │
+  // │ │             Dryer Lint Snippets             │ │
+  // │ ╰─────────────────────────────────────────────╯ │
+  // ╰─────────────────────────────────────────────────╯
+  "Dryer Lint Rule": {
+    "prefix": "\\dryerLintRule",
+    "body": [ 
+      "{",
+        "\t\"name\": \"${1}\", ",
+        "\t\"pattern\": \"${2}\",",
+      "},$0",
+    ]
+  },
+  "Dryer Lint Rule - Define block": {
+    "prefix": ["\\dryerLintDefine"],
+    "body": [
+      "\"(?(DEFINE)\", ",
+      "\t\"(?<${1:capture_name}>${2:pattern})\",$0",
+      "\")\"",
+    ],
+    "description": ""
+  },
+  "Dryer Lint Rule Start": {
+    "prefix": ["\\dryerLintRuleSet"],
+    "body": [
+      "// ╭──────────────────${1/./─/g}───────────────╮",
+      "// │ ╭────────────────${1/./─/g}─────────────╮ │",
+      "// │ │   Dryer Lint Rule Set: \"${1:rule set name}\"   │ │",
+      "// │ ╰────────────────${1/./─/g}─────────────╯ │",
+      "// ╰──────────────────${1/./─/g}───────────────╯",
+      "{",
+      "\t\"name\": \"${1:rule set name}\",",
+      "\t\"language\": \"${2|plaintext,latex,javascript,c++,c,matlab,python,latex-expl3|}\",",
+      "\t// \"glob\": \"*\",",
+      "\t\"rules\": [",
+      "\t\t\\dryerLintRule$0",
+      "\t]",
+      "},"
+    ],
+    "description": ""
+  },
+  // ╭──────────────────────────────────────────────╮
+  // │ ╭──────────────────────────────────────────╮ │
+  // │ │             Snippet Snippets             │ │
+  // │ ╰──────────────────────────────────────────╯ │
+  // ╰──────────────────────────────────────────────╯
+  "Snippet": {
+    "prefix": "\\snippet",
+    "body": [
+      "\"${1}\": {",
+        "\t\"prefix\": [\"${3}\"],",
+        "\t\"body\": [",
+          "\t\t\"${4}\"",
+        "\t],",
+        "\t\"description\": \"${5}\"",
+      "},"
+    ]
+  }, 
+  "Snippet placeholder": {
+    "prefix": ["\\snippetPlaceholder", "\\snippetTabStop"],
+    "body": [
+      "\\${${1|1,2,3,4,5,CLIPBOARD,TM_SELECTED_TEXT,TM_CURRENT_LINE|}:${2:default_value}}"
+    ],
+    "description": "Snippet placeholder with default"
+  },
+  "Snippet placeholder with options": {
+    "prefix": ["\\snippetPlaceholderOptions", "\\snippetTabStopOptions"],
+    "body": [
+      "\\${${1|1,2,3,4,5|}|${2:option 1},${3:option 2}|}"
+    ],
+    "description": "Snippet placeholder with default"
+  },
+  "Snippet placeholder with Regex transform": {
+    "prefix": ["\\snippetPlaceholderAppendRegex", "\\snippetTabStopAppendRegex"],
+    "body": [
+      // "${1:\\{:n}/${2:regex}/${3:\\$1}/${4:gumi}}"
+      "/${2:regex}/${3:\\$1}/${4:gumi}}"
+    ],
+    "description": "Apply a regex find-and-replace to a snippet match."
+  },
+  "Snippet regex capture group replacement - if group is captured": {
+    "prefix": ["\\snippetRegexInsertIfGroupCaptured", "\\snippetRegexInsertIfGroupMatched"],
+    "body": [
+      "\\${${1:regex_group_number}:+${2:inserted text}}"
+    ],
+    "description": ""
+  },
+  "Snippet Variable": {
+    "prefix": ["\\snippetVariable", "$VAR"],
+    "body": [
+      "$${1|TM_SELECTED_TEXT,TM_CURRENT_LINE,TM_CURRENT_WORD,TM_LINE_INDEX,TM_LINE_NUMBER,TM_FILENAME,TM_FILENAME_BASE,TM_DIRECTORY,TM_FILEPATH,RELATIVE_FILEPATH,CLIPBOARD,WORKSPACE_NAME,WORKSPACE_FOLDER,CURSOR_INDEX,CURSOR_NUMBER,CURRENT_YEAR,CURRENT_YEAR_SHORT,CURRENT_MONTH,CURRENT_MONTH_NAME,CURRENT_MONTH_NAME_SHORT,CURRENT_DATE,CURRENT_DAY_NAME,CURRENT_DAY_NAME_SHORT,CURRENT_HOUR,CURRENT_MINUTE,CURRENT_SECOND,CURRENT_SECONDS_UNIX,CURRENT_TIMEZONE_OFFSET,RANDOM,RANDOM_HEX,UUID,BLOCK_COMMENT_START,BLOCK_COMMENT_END,LINE_COMMENT|}"
+    ],
+    "description": "Insert one of the variab"
+  },
+  // ╭───────────────LTeX───────────────╮
+  // │ ╭─────────────LTeX─────────────╮ │
+  // │ │             LTeX             │ │
+  // │ ╰─────────────LTeX─────────────╯ │
+  // ╰───────────────LTeX───────────────╯
+  "LTeX Disable Comment": {
+    "prefix": ["disable LTeX", "\\LTeXDisable"],
+    "body": [
+      "$LINE_COMMENT Disable LTeX for this file (https://valentjn.github.io/ltex/advanced-usage.html#magic-comments)",
+      "$LINE_COMMENT LTeX: enabled=false"
+    ],
+    "description": ""
+  },
+  // ╭────────────────────────────────────────────╮
+  // │ ╭────────────────────────────────────────╮ │
+  // │ │             File Templates             │ │
+  // │ ╰────────────────────────────────────────╯ │
+  // ╰────────────────────────────────────────────╯
+  // For info about file templates, see here https://stackoverflow.com/a/73043147/6651650
+  "LaTeX Package File Template": {
+    "prefix": ["LaTeX Package File Template", "latexPackageTemplate"],
+    "isFileTemplate": true,
+    "body": [
+      "% ${1:package name} - ${2:one-line package summary}",
+      "% ",
+      "% (c) $CURRENT_YEAR - Paul Wintz",
+      "%",
+      "%% This program can be redistributed and/or modified under the terms",
+      "%% of the LaTeX Project Public License Distributed from CTAN archives",
+      "%% in directory macros/latex/base/lppl.txt.",
+      "% ",
+      "\\NeedsTeXFormat{LaTeX2e}",
+      "\\ProvidesPackage{${1:package name}}",
+      "  [$CURRENT_YEAR/$CURRENT_MONTH/$CURRENT_DATE v0.01 ${2:one-line package summary}]",
+      "",
+      "%\\RequirePackage{...}",
+      "",
+      "\\endinput% Stop input here when this file is loaded.",
+      "%%",
+      "%% End of file `${1:package name}.sty'.",
+    ],
+  },
+  "LaTeX Document (Plain)": {
+    "prefix": ["LaTeX Document"],
+    "body": [
+      "\\documentclass{${1|article,minimal,beamer,standalone|}}",
+      "\\begin{document}",
+      "\t$0",
+      "\\end{document}",
+    ],
+  },
+  "LaTeX Document (Standalone TikZ)": {
+    "prefix": ["LaTeX Document"],
+    "body": [
+      "% Use \\input{name_of_this_file.tex} in the main document",
+      "\\documentclass[",
+      "\ttikz,",
+      "\t%crop=false, % Disable cropping.", 
+      "\t%border={〈length (left)〉 〈length (bottom)〉 〈length (right)〉 〈length (top)〉}",
+      "\t%convert={〈conversion options〉}",
+      "\t%png={〈conversion options〉}",
+      "\t%jpg={〈conversion options〉}",
+      "\t%gif={〈conversion options〉}",
+      "\t%svg={〈conversion options〉}",
+      "\t%emf={〈conversion options〉}",
+      "]{standalone}",
+      "% All packages loaded here must be loaded in the main document too.",
+      "\\begin{document}",
+      "\t\\begin{tikzpicture}",
+      "\t${1:\\draw (0,0) rectangle (2,1) node [midway] {Example};}",
+      "\t\\end{tikzpicture}",
+      "\\end{document}",
+    ],
+  },
+  "LaTeX Document (pwintz)": {
+    "prefix": ["LaTeX Document"],
+    "body": [
+      "% Disable LTeX for this file (https://valentjn.github.io/ltex/advanced-usage.html#magic-comments)",
+      "% LTeX: enabled=false",
+      "\\documentclass[",
+        "\t% 10pt, % Font size",
+        "\t% final,",
+        "\t% draft ",
+        "\t% letterpaper, 10pt, conference, % <- ieeeconf",
+      "]{${1|article,ifacconf,ieeeconf|}",
+      "",
+      "% Change the search path to include \"./packages/\".",
+      "\\makeatletter",
+      "\\def\\input@path{{./packages/}}",
+      "\\makeatother",
+      "",
+      "\\usepackage{pwintz_configuration}",
+      "\\usepackage{pwintz_definitions}",
+      "\\usepackage{hideproofs}",
+      "",
+      "\\input{document_configuration}",
+      "\\input{document_definitions}",
+      "",
+      "\\usepackage[${2|isconf,isreport|}]{reportconftoggles}",
+      "",
+      "% Create \\ifdraft{}{} conditional ",
+      "% that switches based on whether \"draft\" ",
+      "% is passed to document class.",
+      "\\usepackage{ifdraft} ",
+      "\\ifdraft{",
+        "\t% Adjust spacing to fit margin notes.",
+        "\t\\usepackage[",
+          "\t\tinner=10mm,",
+          "\t\touter=40mm,",
+          "\t\tmarginparwidth=34mm",
+        "\t]{geometry} ",
+      "}{}",
+      "",
+      "\\usepackage[",
+        "\tfile=gas_with_discontinuous_uncertified_frontmatter.fl_content.tex,",
+        "\tfrontloaderFile=frontloader_templates/hsl_technical_report.fl_template.tex",
+      "]{frontloader}",
+      "",
+      "",
+      "\\begin{document}",
+      "\\insertFrontmatter{}",
+      "",
+      "\t$0",
+      "",
+      "\\insertBibliography{}",
+      "\\end{document}",
+    ],
+  },
+  // ╭──────────────────────────────────────────╮
+  // │ ╭──────────────────────────────────────╮ │
+  // │ │             Unclassified             │ │
+  // │ ╰──────────────────────────────────────╯ │
+  // ╰──────────────────────────────────────────╯
+  "Escaped quote": {
+    "scope": "json",
+    "prefix": ["\\\"", "\\quote"],
+    "body": [
+      "\\\"$TM_SELECTED_TEXT$1\\\""
+    ],
   }
+
 }
